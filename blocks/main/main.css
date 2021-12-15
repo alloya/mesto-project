@@ -1,0 +1,22 @@
+.main {
+  padding: 0 200px 0;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1068px) {
+  .main {
+    padding: 0 70px 0;
+  }
+}
+
+@media (max-width: 882px) {
+  .main {
+    padding: 0 80px 0;
+  }
+}
+
+@media (max-width: 743px) {
+  .main {
+    padding: 0 19px 0;
+  }
+}
