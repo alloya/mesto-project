@@ -9,12 +9,12 @@
   border: 0;
   width: 100%;
   box-sizing: border-box;
-  border-bottom: 1px solid #bcbcc4;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
   background-color: transparent;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  height: 30px;
+  padding: 0 0 10px;
 }
 
 .popup__input:focus {

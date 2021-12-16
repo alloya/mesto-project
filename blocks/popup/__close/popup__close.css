@@ -6,6 +6,7 @@
   width: 32px;
   height: 32px;
   background-image: url("../../../images/Close\ Icon.svg");
+  background-size: cover;
 }
 
 .popup__close:hover {
@@ -14,7 +15,9 @@
 
 @media (max-width: 743px) {
   .popup__close {
-    top: -48px;
+    top: -36px;
     right: 0px;
+    width: 20px;
+    height: 20px;
   }
 }
