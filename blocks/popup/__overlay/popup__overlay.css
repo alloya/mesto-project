@@ -6,12 +6,7 @@
   right: 0;
   background: rgba(0, 0, 0, 0.7);
   transition: opacity 500ms;
+  display: flex;
   visibility: hidden;
   opacity: 0;
-  display: flex;
-}
-
-.popup__overlay:target {
-  visibility: visible;
-  opacity: 1;
 }
