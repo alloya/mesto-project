@@ -7,6 +7,8 @@ let popUp = document.querySelector(".popup__overlay");
 let profileOpenButton = document.querySelector(".profile__edit-button");
 let profileCloseButton = document.querySelector(".popup__close");
 let profileSaveButton = document.querySelector(".popup__button-save");
+let profileName = document.querySelector(".profile__name");
+let profileDescription = document.querySelector(".profile__subtitle");
 
 function renderCards(cards) {
   if (cards.length !== 0) {
@@ -23,7 +25,16 @@ function renderCards(cards) {
       );}
     )
   }
+}
 
+function submitProfileForm(evt) {
+  evt.preventDefault(); 
+  let profileNameInput = document.querySelector(".profile__input-name");
+  let profileDescriptionInput = document.querySelector(".profile__input-description");
+
+  profileName.textContent = profileNameInput.value;
+  profileDescription.textContent = profileDescriptionInput.value;
+  togglePopup();
 }
 
 function togglePopup() {
@@ -33,4 +44,4 @@ function togglePopup() {
 renderCards(cardsArray);
 profileOpenButton.addEventListener('click', togglePopup);
 profileCloseButton.addEventListener('click', togglePopup);
-profileSaveButton.addEventListener('click', togglePopup);
+profileSaveButton.addEventListener('click', submitProfileForm);
