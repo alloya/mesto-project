@@ -46,7 +46,7 @@ function showFullImage(card) {
   fullImageContainer.insertAdjacentHTML('beforeend', 
   `<div class="card__full-container">
       <img src="${card.src}" class="card__full-picture">
-      <p class="card__full-subtitle">${card.alt}</p>
+      <p class="card__full-subtitle">${card.parentElement.innerText}</p>
       <button class="popup__close" type="button" onclick="closeFullImage()"></button>
     </div>`
   );
@@ -107,4 +107,4 @@ profileSaveButton.addEventListener('click', submitProfileForm);
 cardAddButton.addEventListener('click', toggleCardPopup);
 cardSaveButton.addEventListener('click', submitCardForm);
 cardsCloseButton.addEventListener('click', toggleCardPopup);
-fullImageContainerCloseButton.addEventListener('click', toggleFullImagePopup);
+
