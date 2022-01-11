@@ -21,7 +21,6 @@ function initializeCardsList() {
       renderCards(element);
     })
   }
-  debugger
   cards = cardsContainer.querySelectorAll(".card");
 }
 
@@ -45,9 +44,17 @@ function renderCards(card, type = 'beforeend') {
 
 function showFullImage(card) {
   fullImageContainer.insertAdjacentHTML('beforeend', 
-  `<img src="${card.image}" class="card__full-picture">
-    <p class="card__full-subtitle">${card.name}</p>`
+  `<div class="card__full-container">
+      <img src="${card.src}" class="card__full-picture">
+      <p class="card__full-subtitle">${card.alt}</p>
+      <button class="popup__close" type="button" onclick="closeFullImage()"></button>
+    </div>`
   );
+  toggleFullImagePopup();
+}
+
+function closeFullImage() {
+  fullImageContainer.innerHTML="";
   toggleFullImagePopup();
 }
 
@@ -93,16 +100,7 @@ function toggleLike(target) {
   target.classList.toggle("card__heart_inverted");
 }
 
-// function initCards() {
-//   if (cards.length) {
-//     cards.forEach(element => {
-//       element.addEventListener('click', showFullImage);
-//     });
-//   }
-// }
-
 initializeCardsList();
-// initCards();
 profileOpenButton.addEventListener('click', toggleProfilePopup);
 profileCloseButton.addEventListener('click', toggleProfilePopup);
 profileSaveButton.addEventListener('click', submitProfileForm);

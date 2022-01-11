@@ -1,0 +1,6 @@
+.card__full-container {
+  display: flex;
+  height: calc(100vh - 180px);
+  margin: auto;
+  position: relative;
+}
