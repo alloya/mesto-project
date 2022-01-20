@@ -1,4 +1,5 @@
 .card__full-picture {
-  min-height: calc(100vh - 235px);
+  max-height: 75vh;
   object-fit: contain;
+  max-width: 75vw;
 }

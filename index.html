@@ -63,7 +63,7 @@
   <template id="card-template">
     <div class="card">
       <img alt="card-image" class="card__picture" onclick="showFullImage(this)">
-      <button class="card__trash" type="button"></button>
+      <button class="card__trash" type="button" onclick="deleteCard(this)"></button>
       <div class="card__title-wrapper">
         <h2 class="card__title"></h2>
         <button class="card__heart" type="button" onclick="toggleLike(this)"></button>

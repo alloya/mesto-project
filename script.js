@@ -70,6 +70,11 @@ function submitCardForm(evt) {
   toggleCardPopup();
 }
 
+function deleteCard(card) {
+  card.parentElement.remove();
+
+}
+
 function toggleProfilePopup() {
   profilePopup.classList.toggle("popup_opened");
 }
