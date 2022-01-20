@@ -17,7 +17,7 @@
     <div class="header__logo"></div>
   </header>
   <main class="main">
-    
+
     <section class="profile">
       <img src="./images/avatar.jpg" alt="Аватар" class="profile__avatar">
       <div class="profile__info">
@@ -51,15 +51,26 @@
     <div class="popup__container">
       <h2 class="popup__title">Новое место</h2>
       <input class="popup__input card__input-name" type="text" placeholder="Название">
-      <input class="popup__input card__input-url" type="text"
-        placeholder="Ссылка на картинку">
+      <input class="popup__input card__input-url" type="text" placeholder="Ссылка на картинку">
       <button class="popup__button-save" type="submit">Создать</button>
       <button class="popup__close" type="button"></button>
     </div>
   </form>
   <div class="popup__overlay image-popup">
-    
+
   </div>
+
+  <template id="card-template">
+    <div class="card">
+      <img alt="card-image" class="card__picture" onclick="showFullImage(this)">
+      <button class="card__trash" type="button"></button>
+      <div class="card__title-wrapper">
+        <h2 class="card__title"></h2>
+        <button class="card__heart" type="button" onclick="toggleLike(this)"></button>
+      </div>
+    </div>
+  </template>
+
   <script src="./script.js"></script>
 </body>
 

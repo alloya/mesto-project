@@ -1,6 +1,6 @@
-let cardsArray = [ {'name': 'test', 'image': 'https://new-widget.kiwitaxi.com/static/images/Economy.png', 'like': true }, { 'name': 'Карачаевск', 'image': './images/kirill-pershin-1088404-unsplash.jpg', 'like': false }, { 'name': 'Гора Эльбрус', 'image': './images/kirill-pershin-1404681-unsplash.png', 'like': false }, { 'name': 'Домбай', 'image': './images/kirill-pershin-1556355-unsplash.png', 'like': false }, { 'name': 'Гора Эльбрус', 'image': './images/kirill-pershin-1404681-unsplash.png', 'like': false }, { 'name': 'Карачаевск', 'image': './images/kirill-pershin-1088404-unsplash.jpg', 'like': true }, { 'name': 'Домбай', 'image': './images/kirill-pershin-1556355-unsplash.png', 'like': false }];
+const cardsArray = [ {'name': 'test', 'image': 'https://new-widget.kiwitaxi.com/static/images/Economy.png', 'like': true }, { 'name': 'Карачаевск', 'image': './images/kirill-pershin-1088404-unsplash.jpg', 'like': false }, { 'name': 'Гора Эльбрус', 'image': './images/kirill-pershin-1404681-unsplash.png', 'like': false }, { 'name': 'Домбай', 'image': './images/kirill-pershin-1556355-unsplash.png', 'like': false }, { 'name': 'Гора Эльбрус', 'image': './images/kirill-pershin-1404681-unsplash.png', 'like': false }, { 'name': 'Карачаевск', 'image': './images/kirill-pershin-1088404-unsplash.jpg', 'like': true }, { 'name': 'Домбай', 'image': './images/kirill-pershin-1556355-unsplash.png', 'like': false }];
 
-let cardsContainer = document.querySelector(".cards");
+const cardsContainer = document.querySelector(".cards");
 let cards;
 let profilePopup = document.querySelector(".popup__overlay");
 let profileOpenButton = document.querySelector(".profile__edit-button");
@@ -16,47 +16,38 @@ let fullImageContainer = document.querySelector(".image-popup");
 let fullImageContainerCloseButton = fullImageContainer.querySelector(".popup__close");
 
 function initializeCardsList() {
+  debugger
   if (cardsArray.length) {
     cardsArray.forEach(element => {
       renderCards(element);
     })
   }
-  cards = cardsContainer.querySelectorAll(".card");
 }
 
-function renderCards(card, type = 'beforeend') {
-  let likeClass = '';
+function renderCards(card) {
+  const cardTemplate = document.querySelector('#card-template').content;
+  const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
+
+  cardElement.querySelector('.card__title').textContent = card.name;
+  cardElement.querySelector('.card__picture').setAttribute('src', card.image);
   if (card.like) {
-    likeClass = 'card__heart_inverted';
+    cardElement.querySelector('.card__heart').classList.add('card__heart_inverted');
   }
-  cardsContainer.insertAdjacentHTML(type,
-    `<div class="card">
-      <img src=${card.image} alt=${card.name} class="card__picture" onclick="showFullImage(this)">
-      <button class="card__trash" type="button"></button>
-      <div class="card__title-wrapper">
-        <h2 class="card__title">${card.name}
-        </h2>
-        <button class="card__heart ${likeClass}" type="button" onclick="toggleLike(this)"></button>
-      </div>
-    </div>`
-  )
+  cardsContainer.append(cardElement);
 }
 
 function showFullImage(card) {
+  fullImageContainer.innerHTML="";
   fullImageContainer.insertAdjacentHTML('beforeend', 
   `<div class="card__full-container">
       <img src="${card.src}" class="card__full-picture">
       <p class="card__full-subtitle">${card.parentElement.innerText}</p>
-      <button class="popup__close" type="button" onclick="closeFullImage()"></button>
+      <button class="popup__close" type="button" onclick="toggleFullImagePopup()"></button>
     </div>`
   );
   toggleFullImagePopup();
 }
 
-function closeFullImage() {
-  fullImageContainer.innerHTML="";
-  toggleFullImagePopup();
-}
 
 function submitProfileForm(evt) {
   evt.preventDefault();
