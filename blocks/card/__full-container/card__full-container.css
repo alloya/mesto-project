@@ -1,0 +1,7 @@
+.card__full-container {
+  margin: auto;
+  position: relative;
+  font-size: 0;
+  display: flex;
+  flex-direction: column;
+}

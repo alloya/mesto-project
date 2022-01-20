@@ -17,15 +17,7 @@
     <div class="header__logo"></div>
   </header>
   <main class="main">
-    <form class="popup__overlay">
-      <div class="popup__container">
-        <h2 class="popup__title">Редактировать профиль</h2>
-        <input class="popup__input" type="text" value="Жак-Ив Кусто" placeholder="Имя">
-        <input class="popup__input" type="text" value="Исследователь океана" placeholder="О себе">
-        <button class="popup__button" type="submit">Сохранить</button>
-        <button class="popup__close" type="button"></button>
-      </div>
-    </form>
+
     <section class="profile">
       <img src="./images/avatar.jpg" alt="Аватар" class="profile__avatar">
       <div class="profile__info">
@@ -39,59 +31,55 @@
       <button class="profile__plus-button" type="button"></button>
     </section>
     <section class="cards">
-      <div class="card">
-        <img src="./images/kirill-pershin-1088404-unsplash.jpg" alt="Фото Карачаевска" class="card__picture">
-        <div class="card__title-wrapper">
-          <h2 class="card__title">Карачаевск
-          </h2>
-          <button class="card__heart" type="button"></button>
-        </div>
-      </div>
-      <div class="card">
-        <img src="./images/kirill-pershin-1404681-unsplash.png" alt="Фото Эльбруса" class="card__picture">
-        <div class="card__title-wrapper">
-          <h2 class="card__title">Гора Эльбрус
-          </h2>
-          <button class="card__heart" type="button"></button>
-        </div>
-      </div>
-      <div class="card">
-        <img src="./images/kirill-pershin-1556355-unsplash.png" alt="Фото Домбая" class="card__picture">
-        <div class="card__title-wrapper">
-          <h2 class="card__title">Домбай
-          </h2>
-          <button class="card__heart" type="button"></button>
-        </div>
-      </div>
-      <div class="card">
-        <img src="./images/kirill-pershin-1088404-unsplash.jpg" alt="Фото Карачаевска" class="card__picture">
-        <div class="card__title-wrapper">
-          <h2 class="card__title">Гора Эльбрус
-          </h2>
-          <button class="card__heart" type="button"></button>
-        </div>
-      </div>
-      <div class="card">
-        <img src="./images/kirill-pershin-1404681-unsplash.png" alt="Фото Эльбруса" class="card__picture">
-        <div class="card__title-wrapper">
-          <h2 class="card__title">Домбай
-          </h2>
-          <button class="card__heart" type="button"></button>
-        </div>
-      </div>
-      <div class="card">
-        <img src="./images/kirill-pershin-1556355-unsplash.png" alt="Фото Домбая" class="card__picture">
-        <div class="card__title-wrapper">
-          <h2 class="card__title">Карачаево-Черкессия
-          </h2>
-          <button class="card__heart card__heart_inverted" type="button"></button>
-        </div>
-      </div>
+
     </section>
   </main>
   <footer class="footer">
-    <p class="footer__copyright">&copy; 2021 Mesto Russia</p>
+    <p class="footer__copyright">&copy; 2022 Mesto Russia</p>
   </footer>
+  <form class="popup__overlay">
+    <div class="popup__container">
+      <h2 class="popup__title">Редактировать профиль</h2>
+      <input class="popup__input profile__input-name" type="text" value="Жак-Ив Кусто" placeholder="Имя">
+      <input class="popup__input profile__input-description" type="text" value="Исследователь океана"
+        placeholder="О себе">
+      <button class="popup__button-save" type="submit">Сохранить</button>
+      <button class="popup__close" type="button"></button>
+    </div>
+  </form>
+  <form class="popup__overlay cards-popup">
+    <div class="popup__container">
+      <h2 class="popup__title">Новое место</h2>
+      <input class="popup__input card__input-name" type="text" placeholder="Название">
+      <input class="popup__input card__input-url" type="text" placeholder="Ссылка на картинку">
+      <button class="popup__button-save" type="submit">Создать</button>
+      <button class="popup__close" type="button"></button>
+    </div>
+  </form>
+  <div class="popup__overlay image-popup">
+
+  </div>
+
+  <template id="card-template">
+    <div class="card">
+      <img alt="card-image" class="card__picture" onclick="showFullImage(this)">
+      <button class="card__trash" type="button" onclick="deleteCard(this)"></button>
+      <div class="card__title-wrapper">
+        <h2 class="card__title"></h2>
+        <button class="card__heart" type="button" onclick="toggleLike(this)"></button>
+      </div>
+    </div>
+  </template>
+
+  <template id="fullImage-template">
+    <div class="card__full-container">
+      <img class="card__full-picture">
+      <p class="card__full-subtitle"></p>
+      <button class="popup__close" type="button" onclick="toggleFullImagePopup()"></button>
+    </div>
+  </template>
+
+  <script src="./script.js"></script>
 </body>
 
 
