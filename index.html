@@ -31,56 +31,55 @@
       <button class="profile__plus-button" type="button"></button>
     </section>
     <section class="cards">
-
     </section>
   </main>
   <footer class="footer">
     <p class="footer__copyright">&copy; 2022 Mesto Russia</p>
   </footer>
-  <form class="popup__overlay">
-    <div class="popup__container">
-      <h2 class="popup__title">Редактировать профиль</h2>
-      <input class="popup__input profile__input-name" type="text" value="Жак-Ив Кусто" placeholder="Имя">
-      <input class="popup__input profile__input-description" type="text" value="Исследователь океана"
-        placeholder="О себе">
-      <button class="popup__button-save" type="submit">Сохранить</button>
+  <section id="profile-popup">
+    <form class="popup profile_popup">
+      <div class="popup__container">
+        <h2 class="popup__title">Редактировать профиль</h2>
+        <input class="popup__input profile__input-name" type="text" value="Жак-Ив Кусто" placeholder="Имя">
+        <input class="popup__input profile__input-description" type="text" value="Исследователь океана"
+          placeholder="О себе">
+        <button class="popup__button-save" type="submit">Сохранить</button>
+        <button class="popup__close" type="button"></button>
+      </div>
+    </form>
+  </section>
+  <section id="addCard-popup">
+    <form class="popup cards_popup">
+      <div class="popup__container">
+        <h2 class="popup__title">Новое место</h2>
+        <input class="popup__input card__input-name" type="text" placeholder="Название">
+        <input class="popup__input card__input-url" type="text" placeholder="Ссылка на картинку">
+        <button class="popup__button-save" type="submit">Создать</button>
+        <button class="popup__close" type="button"></button>
+      </div>
+    </form>
+  </section>
+  <section class="popup image_popup">
+    <div class="card__full-container">
+      <img class="card__full-picture">
+      <p class="card__full-subtitle"></p>
       <button class="popup__close" type="button"></button>
     </div>
-  </form>
-  <form class="popup__overlay cards-popup">
-    <div class="popup__container">
-      <h2 class="popup__title">Новое место</h2>
-      <input class="popup__input card__input-name" type="text" placeholder="Название">
-      <input class="popup__input card__input-url" type="text" placeholder="Ссылка на картинку">
-      <button class="popup__button-save" type="submit">Создать</button>
-      <button class="popup__close" type="button"></button>
-    </div>
-  </form>
-  <div class="popup__overlay image-popup">
-
-  </div>
+  </section>
 
   <template id="card-template">
     <div class="card">
-      <img alt="card-image" class="card__picture" onclick="showFullImage(this)">
-      <button class="card__trash" type="button" onclick="deleteCard(this)"></button>
+      <img alt="card-image" class="card__picture">
+      <button class="card__delete" type="button"></button>
       <div class="card__title-wrapper">
         <h2 class="card__title"></h2>
-        <button class="card__heart" type="button" onclick="toggleLike(this)"></button>
+        <button class="card__like" type="button"></button>
       </div>
     </div>
   </template>
 
-  <template id="fullImage-template">
-    <div class="card__full-container">
-      <img class="card__full-picture">
-      <p class="card__full-subtitle"></p>
-      <button class="popup__close" type="button" onclick="toggleFullImagePopup()"></button>
-    </div>
-  </template>
-
-  <script src="./script.js"></script>
+  <script src="./script/const.js"></script>
+  <script src="./script/script.js"></script>
 </body>
-
 
 </html>
