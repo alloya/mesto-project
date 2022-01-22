@@ -38,7 +38,7 @@ function showFullImage(card) {
   fullImage.setAttribute('alt', card.alt);
   fullImageSubtitle.textContent = card.alt;
 
-  openPopup(fullImageContainer);
+  openPopup(fullImagePopup);
 }
 
 function submitProfileForm(evt) {
@@ -67,12 +67,21 @@ function closePopup(popup) {
   popup.classList.remove('popup_opened');
 }
 
+function closePopup2() {
+  closePopupButton.forEach(element => {
+    element.parentElement.parentElement.classList.remove('popup_opened');
+  });
+}
+
 initializeCardsList();
-closeFullImageButton.addEventListener('click', () => closePopup(fullImageContainer));
+//closeFullImageButton.addEventListener('click', () => closePopup(fullImagePopup));
 profileOpenButton.addEventListener('click', () => openPopup(profilePopup));
-profileCloseButton.addEventListener('click', () => closePopup(profilePopup));
+//profileCloseButton.addEventListener('click', () => closePopup(profilePopup));
 profilePopup.addEventListener('submit', submitProfileForm);
 cardAddButton.addEventListener('click', () => openPopup(cardPopup));
 cardPopup.addEventListener('submit', submitCardForm);
-cardsCloseButton.addEventListener('click', () => closePopup(cardPopup));
+//cardsCloseButton.addEventListener('click', () => closePopup(cardPopup));
 
+closeFullImageButton.addEventListener('click', () => closePopup2());
+cardsCloseButton.addEventListener('click', () => closePopup2());
+profileCloseButton.addEventListener('click', () => closePopup2());
