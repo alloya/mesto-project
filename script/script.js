@@ -51,8 +51,8 @@ function submitProfileForm(evt) {
 function submitCardForm(evt) {
   evt.preventDefault();
   if (cardNameInput.value && cardUrlInput.value) {
-    cardsArray.push({ "name": cardNameInput.value, "image": cardUrlInput.value, "like": false });
-    renderCards(cardsArray[cardsArray.length-1]);
+    const newCard = { "name": cardNameInput.value, "image": cardUrlInput.value, "like": false }
+    renderCards(newCard);
     cardNameInput.value = '';
     cardUrlInput.value = '';
   }
@@ -67,21 +67,13 @@ function closePopup(popup) {
   popup.classList.remove('popup_opened');
 }
 
-function closePopup2() {
-  closePopupButton.forEach(element => {
-    element.parentElement.parentElement.classList.remove('popup_opened');
-  });
-}
 
 initializeCardsList();
-//closeFullImageButton.addEventListener('click', () => closePopup(fullImagePopup));
+closeFullImageButton.addEventListener('click', () => closePopup(fullImagePopup));
 profileOpenButton.addEventListener('click', () => openPopup(profilePopup));
-//profileCloseButton.addEventListener('click', () => closePopup(profilePopup));
+profileCloseButton.addEventListener('click', () => closePopup(profilePopup));
 profilePopup.addEventListener('submit', submitProfileForm);
 cardAddButton.addEventListener('click', () => openPopup(cardPopup));
 cardPopup.addEventListener('submit', submitCardForm);
-//cardsCloseButton.addEventListener('click', () => closePopup(cardPopup));
+cardsCloseButton.addEventListener('click', () => closePopup(cardPopup));
 
-closeFullImageButton.addEventListener('click', () => closePopup2());
-cardsCloseButton.addEventListener('click', () => closePopup2());
-profileCloseButton.addEventListener('click', () => closePopup2());

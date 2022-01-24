@@ -23,5 +23,3 @@ const profileDescriptionInput = document.querySelector(".profile__input-descript
 const fullImage = fullImagePopup.querySelector('.card__full-picture');
 const fullImageSubtitle = fullImagePopup.querySelector('.card__full-subtitle');
 const closeFullImageButton = fullImagePopup.querySelector('.popup__close');
-
-const closePopupButton = document.querySelectorAll(".popup__close");
