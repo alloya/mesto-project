@@ -67,7 +67,6 @@ function closePopup(popup) {
   popup.classList.remove('popup_opened');
 }
 
-
 initializeCardsList();
 closeFullImageButton.addEventListener('click', () => closePopup(fullImagePopup));
 profileOpenButton.addEventListener('click', () => openPopup(profilePopup));
