@@ -39,6 +39,7 @@ function showFullImage(card) {
   fullImageSubtitle.textContent = card.alt;
 
   openPopup(fullImagePopup);
+  fullImagePopup.focus();
 }
 
 function submitProfileForm(evt) {
