@@ -8,7 +8,6 @@
   position: relative;
   transition: all 0.5s ease-in-out;
   width: 430px;
-  height: 330px;
 }
 
 @media (max-width: 743px) {

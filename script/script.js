@@ -62,6 +62,7 @@ function submitCardForm(evt) {
 
 function openPopup(popup) {
   popup.classList.add('popup_opened');
+  popup.focus();
 }
 
 function closePopup(popup) {
@@ -76,4 +77,5 @@ profilePopup.addEventListener('submit', submitProfileForm);
 cardAddButton.addEventListener('click', () => openPopup(cardPopup));
 cardPopup.addEventListener('submit', submitCardForm);
 cardsCloseButton.addEventListener('click', () => closePopup(cardPopup));
-
+avatarEdit.addEventListener('click', () => openPopup(avatarPopup));
+closeAvatarButton.addEventListener('click', () => closePopup(avatarPopup));
