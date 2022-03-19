@@ -34,28 +34,29 @@
     </section>
     <section class="cards">
     </section>
+
     <section id="profile-popup">
-      <form class="popup profile_popup">
-        <div class="popup__container">
+      <div class="popup profile_popup">
+        <form class="form popup__container">
           <h2 class="popup__title">Редактировать профиль</h2>
           <input class="popup__input profile__input-name" type="text" value="Жак-Ив Кусто" placeholder="Имя">
           <input class="popup__input profile__input-description" type="text" value="Исследователь океана"
             placeholder="О себе">
           <button class="popup__button-save" type="submit">Сохранить</button>
           <button class="popup__close" type="button"></button>
-        </div>
-      </form>
+        </form>
+      </div>
     </section>
     <section id="addCard-popup">
-      <form class="popup cards_popup">
-        <div class="popup__container">
+      <div class="popup cards_popup">
+        <form class="form popup__container">
           <h2 class="popup__title">Новое место</h2>
           <input class="popup__input card__input-name" type="text" placeholder="Название">
           <input class="popup__input card__input-url" type="text" placeholder="Ссылка на картинку">
           <button class="popup__button-save" type="submit">Создать</button>
           <button class="popup__close" type="button"></button>
-        </div>
-      </form>
+        </form>
+      </div>
     </section>
     <section class="popup image_popup" tabindex="-1">
       <div class="card__full-container">
@@ -65,12 +66,15 @@
       </div>
     </section>
     <section class="popup avatar-popup" tabindex="-1">
-      <div class="popup__container">
+      <form class="form form-avatar popup__container" novalidate>
         <h2 class="popup__title">Обновить аватар</h2>
-        <input class="popup__input card__input-name" type="text" placeholder="Ссылка на изображение">
+        <label class="form__field">
+          <input class="popup__input form__input" id="avatar-input" type="url" placeholder="Ссылка на изображение" required>
+          <span class="form__input-error avatar-input-error"></span>
+        </label>
         <button class="popup__button-save" type="submit">Сохранить</button>
         <button class="popup__close" type="button"></button>
-      </div>
+      </form>
     </section>
   </main>
   <footer class="footer">
@@ -91,6 +95,7 @@
 
   <script src="./script/const.js"></script>
   <script src="./script/overlay.js"></script>
+  <script src="./script/forms.js"></script>
   <script src="./script/script.js"></script>
 </body>
 
