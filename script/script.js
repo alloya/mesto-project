@@ -73,7 +73,7 @@ initializeCardsList();
 closeFullImageButton.addEventListener('click', () => closePopup(fullImagePopup));
 profileOpenButton.addEventListener('click', () => openPopup(profilePopup));
 profileCloseButton.addEventListener('click', () => closePopup(profilePopup));
-profilePopup.addEventListener('submit', submitProfileForm);
+// profilePopup.addEventListener('submit', submitProfileForm);
 cardAddButton.addEventListener('click', () => openPopup(cardPopup));
 cardPopup.addEventListener('submit', submitCardForm);
 cardsCloseButton.addEventListener('click', () => closePopup(cardPopup));
