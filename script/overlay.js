@@ -6,7 +6,7 @@ function closePopup(evt) {
     evt.target.classList.remove('popup_opened');
 }
 
-main.addEventListener('click', closePopup);
+main.addEventListener('mousedown', closePopup);
 main.addEventListener('keydown', (evt) => {
     const overlay = document.querySelector('.popup_opened');
     if ((evt.key === 'Escape') && overlay) {
