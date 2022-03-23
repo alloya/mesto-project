@@ -31,7 +31,7 @@ const setEventListeners = (formElement) => {
     }));
 }
 
-function enableValidation() {
+export function enableValidation() {
     const formList = Array.from(document.querySelectorAll('.form'));
     formList.forEach(formElement => {
         formElement.addEventListener('submit', (evt) => {
@@ -55,5 +55,3 @@ function toggleButtonState(inputList, buttonElement) {
         buttonElement.classList.remove('button_inactive');
     }
 }
-
-enableValidation();

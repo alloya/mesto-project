@@ -12,7 +12,7 @@
     left: 50px;
     height: 26px;
     width: 26px;
-    background-image: url(../../../images/pencil.svg);
+    background-image: url('../../../images/pencil.svg');
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
