@@ -1,5 +1,6 @@
-import {cardsArray, cardPopup, fullImagePopup, cardsContainer, cardNameInput, cardUrlInput, cardTemplate, fullImage, fullImageSubtitle} from './const';
+import {cardsArray, cardPopup, cardForm, fullImagePopup, cardsContainer, cardNameInput, cardUrlInput, cardTemplate, fullImage, fullImageSubtitle, cardSaveButton} from './const';
 import {openPopup, closePopup} from './modal';
+import {toggleButtonState} from './validate';
 
 function createCard(card) {
     const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
@@ -16,7 +17,7 @@ function createCard(card) {
     }
     cardImage.addEventListener('click', () => showFullImage(cardImage));
     cardDelete.addEventListener('click', () => {
-      cardDelete.closest('.card').remove();
+        cardElement.remove();
     });
     cardLike.addEventListener('click', () => {
       cardLike.classList.toggle('card__like_inverted');
@@ -41,8 +42,7 @@ function createCard(card) {
     if (cardNameInput.value && cardUrlInput.value) {
       const newCard = { "name": cardNameInput.value, "image": cardUrlInput.value, "like": false }
       renderCards(newCard);
-      cardNameInput.value = '';
-      cardUrlInput.value = '';
+      toggleButtonState([cardUrlInput, cardNameInput], cardSaveButton);
     }
     closePopup(cardPopup);
   }
