@@ -1,4 +1,4 @@
-import {profilePopup, profileName, profileDescription, profileNameInput, profileDescriptionInput, profileSaveButton, avatarEdit, avatarPopup, avatarInput, avatarForm, submitAvatarButton, formElementClass, formElements, errorObject, closePopupList} from './const';
+import {profilePopup, profileName, profileDescription, profileNameInput, profileDescriptionInput, profileSaveButton, avatarEdit, avatarPopup, avatarInput, submitAvatarButton, formElementClass, formElements, errorObject} from './const';
 import { hideError } from './validate';
 import { toggleButtonState } from './validate';
 
@@ -11,9 +11,11 @@ function closeByEscape(evt) {
 }
 
 function closeByOverlayClick(evt) {
-  if (!evt.target.closest(formElementClass) && !evt.target.closest('.card__full-container')) {
-    const openedPopup = document.querySelector('.popup_opened');
-    closePopup(openedPopup);
+  if (evt.target.classList.contains('popup_opened')) {
+    closePopup(evt.target);
+  }
+  if (evt.target.classList.contains('popup__close')) {
+    closePopup(evt.target.closest('.popup_opened'));
   }
 }
 
@@ -52,23 +54,7 @@ export function openPopup(popup) {
   export function submitNewAvatar(evt) {
     evt.preventDefault();
     avatarEdit.style.backgroundImage = `url('${avatarInput.value}')`;
-    avatarForm.reset();
     closePopup(avatarPopup);
     toggleButtonState([avatarInput], submitAvatarButton);
   }
 
-  export function closePopup2(popupList) {
-    popupList.forEach((popup) => {
-      popup.addEventListener('mousedown', (evt) => {
-        console.log(evt.target.classList)
-          if (evt.target.classList.contains('popup_opened')) {
-            debugger
-              closePopup(popup)
-          }
-          if (evt.target.classList.contains('popup__close')) {
-            closePopup(popup)
-          }
-      })
-  })
-
-  }
