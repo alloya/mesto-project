@@ -1,4 +1,4 @@
-import {profilePopup, profileName, profileDescription, profileNameInput, profileDescriptionInput, profileSaveButton, avatarEdit, avatarPopup, avatarInput, submitAvatarButton, formElementClass, formElements, errorObject} from './const';
+import {profilePopup, profileName, profileDescription, profileSaveButton, profileNameInput, profileDescriptionInput, avatarEdit, avatarPopup, avatarInput, formElementClass, formElements, errorObject} from './const';
 import { hideError } from './validate';
 import { toggleButtonState } from './validate';
 
@@ -30,13 +30,10 @@ export function openPopup(popup) {
     popup.removeEventListener('keydown', closeByEscape);
     popup.removeEventListener('mousedown', closeByOverlayClick);
     popup.classList.remove('popup_opened');
-    const form = popup.querySelector(formElementClass);
-    if (form) {
-      resetForm(form);
-    }
   }
 
-  function resetForm(form) {
+  export function resetForm(popup) {
+    const form = popup.querySelector(formElementClass);
     form.reset();
     const inputList = Array.from(form.querySelectorAll(formElements.input));
     inputList.forEach(input => hideError(form, input, errorObject));
@@ -48,13 +45,17 @@ export function openPopup(popup) {
     profileName.textContent = profileNameInput.value;
     profileDescription.textContent = profileDescriptionInput.value;
     closePopup(profilePopup);
-    toggleButtonState([profileNameInput, profileDescriptionInput], profileSaveButton);
   }
 
   export function submitNewAvatar(evt) {
     evt.preventDefault();
     avatarEdit.style.backgroundImage = `url('${avatarInput.value}')`;
     closePopup(avatarPopup);
-    toggleButtonState([avatarInput], submitAvatarButton);
+  }
+
+  export function setUserData() {
+    profileNameInput.value = profileName.textContent;
+    profileDescriptionInput.value = profileDescription.textContent;
+    toggleButtonState([profileNameInput, profileDescriptionInput], profileSaveButton);
   }
 

@@ -36,6 +36,6 @@ export const avatarForm = avatarPopup.querySelector('.form-avatar');
 export const avatarInput = avatarPopup.querySelector('input');
 export const errorObject = {inputErrorClass: 'form__input_type_error', spanErrorClass: 'form__input-error_active'};
 export const formList = document.querySelectorAll('.form');
-export const formElements = {input: '.form__input', submitButton: '.popup__button-save'};
+export const formElements = {input: '.form__input', submitButton: '.popup__button-save', buttonInactive: 'button_inactive'};
 export const formElementClass = '.form';
 export const popupList = document.querySelectorAll('.popup');

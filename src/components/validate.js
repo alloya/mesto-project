@@ -1,3 +1,5 @@
+import { formElements } from "./const";
+
 const showError = (formElement, inputElement, errorMessage, errorObject) => {
     const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
     inputElement.classList.add(errorObject.inputErrorClass);
@@ -49,11 +51,11 @@ function hasInvalidInput(inputList) {
 
 export function toggleButtonState(inputList, buttonElement) {
     if (hasInvalidInput(inputList)) {
-        buttonElement.classList.add('button_inactive');
+        buttonElement.classList.add(formElements.buttonInactive);
         buttonElement.setAttribute('disabled', '');
     }
     else {
-        buttonElement.classList.remove('button_inactive');
+        buttonElement.classList.remove(formElements.buttonInactive);
         buttonElement.removeAttribute('disabled', '');
     }
 }
