@@ -1,10 +1,20 @@
 import './index.css';
 import {profilePopup, cardPopup, cardAddButton, profileOpenButton, avatarEdit, avatarPopup, avatarForm, errorObject, formList, formElements} from './components/const';
 import {enableValidation} from './components/validate';
-import {openPopup, submitProfileForm, submitNewAvatar, resetForm, setUserData} from './components/modal';
-import {initializeCardsList, submitCardForm} from './components/card';
+import {openPopup, resetForm} from './components/modal';
+import {submitProfileForm, submitNewAvatar, setUserData, fillUserData} from './components/profile';
+import {initializeCardsList, submitCardForm, setLikes, setTrashbins} from './components/card';
+import {getCurrentUser, getCards} from './components/api';
 
-initializeCardsList();
+const userPromise = getCurrentUser();
+
+const cardsPromise = userPromise.then(res => getCards());
+
+Promise.all([userPromise, cardsPromise]).then(([user, cards]) => { 
+  fillUserData(user);
+  initializeCardsList(cards, user._id);
+});
+
 profileOpenButton.addEventListener('click', () => {
   resetForm(profilePopup);
   setUserData();
