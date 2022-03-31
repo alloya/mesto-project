@@ -5,12 +5,13 @@ import {openPopup, resetForm} from './components/modal';
 import {submitProfileForm, submitNewAvatar, setUserData, fillUserData} from './components/profile';
 import {initializeCardsList, submitCardForm, setLikes, setTrashbins} from './components/card';
 import {getCurrentUser, getCards} from './components/api';
-
+export let currUser = {};
 const userPromise = getCurrentUser();
 
 const cardsPromise = userPromise.then(res => getCards());
 
 Promise.all([userPromise, cardsPromise]).then(([user, cards]) => { 
+  currUser = user;
   fillUserData(user);
   initializeCardsList(cards, user._id);
 });

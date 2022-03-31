@@ -1,6 +1,9 @@
+import { deleteLike, putLike } from './api';
 import { cardsArray, cardPopup, fullImagePopup, cardsContainer, cardNameInput, cardUrlInput, cardTemplate, fullImage, fullImageSubtitle } from './const';
 import { openPopup, closePopup } from './modal';
 import { toggleButtonState } from './validate';
+import { currUser } from '../index';
+
 
 function createCard(card, userId) {
   const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
@@ -14,22 +17,41 @@ function createCard(card, userId) {
   cardImage.setAttribute('src', card.link);
   cardImage.setAttribute('alt', card.name);
 
-  manageLikes(cardLike, likeCounter, card.likes, userId);
+  manageLikes(cardLike, likeCounter, card);
   manageBins(card, cardDelete, userId);
 
   cardImage.addEventListener('click', () => showFullImage(cardImage));
+  cardLike.addEventListener('click', handleLikeClick, false);
 
   return cardElement;
 }
 
-function manageLikes(likeElement, likeCounter, likeArray, userId) {
-  if (likeArray.some((like => like._id == userId))) {
-    likeElement.classList.add('card__like_inverted');
+function handleLikeClick(evt) {
+  console.log(evt.target.nextElementSibling)
+  if (evt.target.getAttribute('like') == "true") {
+    deleteLike(evt.target.getAttribute('dataId'))
+      .then(res => {
+        manageLikes(evt.target, evt.target.nextElementSibling, res);
+      })
   }
-  likeCounter.textContent = likeArray && likeArray.length || 0;
-  likeElement.addEventListener('click', () => {
-    likeElement.classList.toggle('card__like_inverted');
-  });
+  else {
+    putLike(evt.target.getAttribute('dataId'))
+    .then(res => manageLikes(evt.target, evt.target.nextElementSibling, res))
+  }
+}
+
+function manageLikes(likeElement, likeCounter, card) {
+  debugger
+  if (card.likes.some((like => like._id == currUser._id))) {
+    likeElement.classList.add('card__like_inverted');
+    likeElement.setAttribute('like', true);
+  }
+  else {
+    likeElement.classList.remove('card__like_inverted');
+    likeElement.setAttribute('like', false);
+  }
+  likeCounter.textContent = card.likes && card.likes.length || 0;
+  likeElement.setAttribute('dataId', card._id);
 }
 
 function manageBins(card, binElement, userId) {
