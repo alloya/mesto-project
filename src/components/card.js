@@ -1,4 +1,4 @@
-import { deleteLike, putLike } from './api';
+import { createNewCard, deleteLike, putLike, deleteCard } from './api';
 import { cardsArray, cardPopup, fullImagePopup, cardsContainer, cardNameInput, cardUrlInput, cardTemplate, fullImage, fullImageSubtitle } from './const';
 import { openPopup, closePopup } from './modal';
 import { toggleButtonState } from './validate';
@@ -12,10 +12,10 @@ function createCard(card, userId) {
   const cardLike = cardElement.querySelector('.card__like');
   const likeCounter = cardElement.querySelector('.card__like-counter');
 
-
   cardElement.querySelector('.card__title').textContent = card.name;
   cardImage.setAttribute('src', card.link);
   cardImage.setAttribute('alt', card.name);
+  cardElement.setAttribute('dataId', card._id);
 
   manageLikes(cardLike, likeCounter, card);
   manageBins(card, cardDelete, userId);
@@ -27,21 +27,22 @@ function createCard(card, userId) {
 }
 
 function handleLikeClick(evt) {
-  console.log(evt.target.nextElementSibling)
+  evt.target.setAttribute('disabled', '');
   if (evt.target.getAttribute('like') == "true") {
-    deleteLike(evt.target.getAttribute('dataId'))
+    deleteLike(evt.target.closest('.card').getAttribute('dataId'))
       .then(res => {
         manageLikes(evt.target, evt.target.nextElementSibling, res);
+        evt.target.removeAttribute('disabled', '');
       })
   }
   else {
-    putLike(evt.target.getAttribute('dataId'))
-    .then(res => manageLikes(evt.target, evt.target.nextElementSibling, res))
+    putLike(evt.target.closest('.card').getAttribute('dataId'))
+      .then(res => manageLikes(evt.target, evt.target.nextElementSibling, res));
+      evt.target.removeAttribute('disabled', '');
   }
 }
 
 function manageLikes(likeElement, likeCounter, card) {
-  debugger
   if (card.likes.some((like => like._id == currUser._id))) {
     likeElement.classList.add('card__like_inverted');
     likeElement.setAttribute('like', true);
@@ -51,16 +52,14 @@ function manageLikes(likeElement, likeCounter, card) {
     likeElement.setAttribute('like', false);
   }
   likeCounter.textContent = card.likes && card.likes.length || 0;
-  likeElement.setAttribute('dataId', card._id);
 }
 
 function manageBins(card, binElement, userId) {
   if (card.owner._id != userId) {
     binElement.remove();
+    return;
   }
-  binElement.addEventListener('click', () => {
-    binElement.closest('.card').remove();
-  });
+  binElement.addEventListener('click', removeCard);
 }
 
 export function initializeCardsList(cardList, userId) {
@@ -74,13 +73,11 @@ export function initializeCardsList(cardList, userId) {
 
 export function submitCardForm(evt) {
   evt.preventDefault();
-  if (cardNameInput.value && cardUrlInput.value) {
-    const newCard = { "name": cardNameInput.value, "link": cardUrlInput.value, "likes": [], "owner": { "_id": "b8c445deb7a8e01ab99666a2" } };
-    cardsContainer.prepend(createCard(newCard, "b8c445deb7a8e01ab99666a2"));
-    cardNameInput.value = '';
-    cardUrlInput.value = '';
-  }
-  closePopup(cardPopup);
+  createNewCard(evt.target.elements.cardName.value, evt.target.elements.cardLink.value)
+  .then(res => {
+    cardsContainer.prepend(createCard(res, currUser._id));
+    closePopup(cardPopup);
+  })
 }
 
 function showFullImage(card) {
@@ -89,4 +86,9 @@ function showFullImage(card) {
   fullImageSubtitle.textContent = card.alt;
 
   openPopup(fullImagePopup);
+}
+
+function removeCard(evt) {
+  deleteCard(evt.target.closest('.card').getAttribute('dataId'))
+  .then(evt.target.closest('.card').remove())
 }

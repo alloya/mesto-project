@@ -3,9 +3,10 @@ import {profilePopup, cardPopup, cardAddButton, profileOpenButton, avatarEdit, a
 import {enableValidation} from './components/validate';
 import {openPopup, resetForm} from './components/modal';
 import {submitProfileForm, submitNewAvatar, setUserData, fillUserData} from './components/profile';
-import {initializeCardsList, submitCardForm, setLikes, setTrashbins} from './components/card';
+import {initializeCardsList, submitCardForm} from './components/card';
 import {getCurrentUser, getCards} from './components/api';
 export let currUser = {};
+
 const userPromise = getCurrentUser();
 
 const cardsPromise = userPromise.then(res => getCards());

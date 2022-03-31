@@ -28,6 +28,45 @@ export function getCurrentUser() {
     })
 }
 
+export function updateCurrentUser(name, about) {
+  return fetch(`${auth.apiUrl}${auth.groupId}/users/me`, {
+    method: "PATCH",
+    headers: {
+      authorization: auth.token,
+      'Content-type': 'application/json'
+    },
+    body: JSON.stringify({
+      name: name,
+      about: about
+    })
+  })
+    .then(res => {
+      if (res.ok) {
+        return res.json();
+      }
+      return Promise.reject(`Ошибка: ${res.status}`);
+    })
+}
+
+export function updateCurrentUserAvatar(avatarSrc) {
+  return fetch(`${auth.apiUrl}${auth.groupId}/users/me/avatar`, {
+    method: "PATCH",
+    headers: {
+      authorization: auth.token,
+      'Content-type': 'application/json'
+    },
+    body: JSON.stringify({
+      avatar: avatarSrc
+    })
+  })
+    .then(res => {
+      if (res.ok) {
+        return res.json();
+      }
+      return Promise.reject(`Ошибка: ${res.status}`);
+    })
+}
+
 export function putLike(cardId) {
   return fetch(`${auth.apiUrl}${auth.groupId}/cards/likes/${cardId}`, {
     method: "PUT",
@@ -45,6 +84,41 @@ export function putLike(cardId) {
 
 export function deleteLike(cardId) {
   return fetch(`${auth.apiUrl}${auth.groupId}/cards/likes/${cardId}`, {
+    method: "DELETE",
+    headers: {
+      authorization: auth.token
+    }
+  })
+  .then(res => {
+    if (res.ok) {
+      return res.json();
+    }
+    return Promise.reject(`Ошибка: ${res.status}`);
+  })
+}
+
+export function createNewCard(cardName, cardLink) {
+  return fetch(`${auth.apiUrl}${auth.groupId}/cards`, {
+    method: "POST",
+    headers: {
+      authorization: auth.token,
+      'Content-type': 'application/json'
+    },
+    body: JSON.stringify({
+      name: cardName,
+      link: cardLink
+    })
+  })
+    .then(res => {
+      if (res.ok) {
+        return res.json();
+      }
+      return Promise.reject(`Ошибка: ${res.status}`);
+    })
+}
+
+export function deleteCard(cardId) {
+  return fetch(`${auth.apiUrl}${auth.groupId}/cards/${cardId}`, {
     method: "DELETE",
     headers: {
       authorization: auth.token
