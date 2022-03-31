@@ -1,0 +1,12 @@
+.loading-bar {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    height: 3px;
+    width: 100%;
+    background-image: linear-gradient(to left, rgba(255,255,255,1), rgba(255,255,255,1), rgba(255,255,255,0.7), rgba(255,255,255,0.5), rgba(255,255,255,0.3), rgba(255,255,255,0), rgba(255,255,255,0.3), rgba(255,255,255,0.5), rgba(255,255,255,0.7),rgba(255,255,255,1),rgba(255,255,255,1));
+    animation: loadingBreath 4s linear infinite;
+    background-size: 300% 300%;
+    background-position: -200%;
+    z-index: 1001;
+}

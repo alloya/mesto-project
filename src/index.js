@@ -5,6 +5,7 @@ import {openPopup, resetForm} from './components/modal';
 import {submitProfileForm, submitNewAvatar, setUserData, fillUserData} from './components/profile';
 import {initializeCardsList, submitCardForm} from './components/card';
 import {getCurrentUser, getCards} from './components/api';
+import { setMainVisible } from './components/common';
 export let currUser = {};
 
 const userPromise = getCurrentUser();
@@ -15,6 +16,7 @@ Promise.all([userPromise, cardsPromise]).then(([user, cards]) => {
   currUser = user;
   fillUserData(user);
   initializeCardsList(cards, user._id);
+  setMainVisible();
 });
 
 profileOpenButton.addEventListener('click', () => {

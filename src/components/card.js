@@ -38,7 +38,7 @@ function handleLikeClick(evt) {
   else {
     putLike(evt.target.closest('.card').getAttribute('dataId'))
       .then(res => manageLikes(evt.target, evt.target.nextElementSibling, res));
-      evt.target.removeAttribute('disabled', '');
+    evt.target.removeAttribute('disabled', '');
   }
 }
 
@@ -74,10 +74,10 @@ export function initializeCardsList(cardList, userId) {
 export function submitCardForm(evt) {
   evt.preventDefault();
   createNewCard(evt.target.elements.cardName.value, evt.target.elements.cardLink.value)
-  .then(res => {
-    cardsContainer.prepend(createCard(res, currUser._id));
-    closePopup(cardPopup);
-  })
+    .then(res => {
+      cardsContainer.prepend(createCard(res, currUser._id));
+      closePopup(cardPopup);
+    })
 }
 
 function showFullImage(card) {
@@ -90,5 +90,5 @@ function showFullImage(card) {
 
 function removeCard(evt) {
   deleteCard(evt.target.closest('.card').getAttribute('dataId'))
-  .then(evt.target.closest('.card').remove())
+    .then(evt.target.closest('.card').remove())
 }
