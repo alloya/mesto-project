@@ -39,3 +39,4 @@ export const formList = document.querySelectorAll('.form');
 export const formElements = {input: '.form__input', submitButton: '.popup__button-save', buttonInactive: 'button_inactive'};
 export const formElementClass = '.form';
 export const popupList = document.querySelectorAll('.popup');
+export const loadingBar = document.querySelector('.loading-bar');

@@ -5,7 +5,7 @@ import {openPopup, resetForm} from './components/modal';
 import {submitProfileForm, submitNewAvatar, setUserData, fillUserData} from './components/profile';
 import {initializeCardsList, submitCardForm} from './components/card';
 import {getCurrentUser, getCards} from './components/api';
-import { setMainVisible } from './components/common';
+import { hideLoadingBar, setMainVisible } from './components/common';
 export let currUser = {};
 
 const userPromise = getCurrentUser();
@@ -14,8 +14,11 @@ const cardsPromise = userPromise.then(res => getCards());
 
 Promise.all([userPromise, cardsPromise]).then(([user, cards]) => { 
   currUser = user;
+  debugger
+
   fillUserData(user);
   initializeCardsList(cards, user._id);
+  hideLoadingBar();
   setMainVisible();
 });
 
