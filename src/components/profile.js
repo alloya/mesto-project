@@ -1,7 +1,8 @@
-import {profilePopup, profileName, profileDescription, profileNameInput, profileDescriptionInput, avatarEdit, avatarPopup, profileSaveButton} from './const';
+import {profilePopup, profileName, profileDescription, profileNameInput, profileDescriptionInput, avatarEdit, avatarPopup, profileSaveButton, loadingBar} from './const';
 import { toggleButtonState } from './validate';
 import { closePopup } from './modal';
 import { getCurrentUser, updateCurrentUser, updateCurrentUserAvatar } from './api';
+import { setInvisible, setVisible } from './common';
 
 
 
@@ -12,27 +13,26 @@ export function fillUserData(data) {
 }
 
 export function submitProfileForm(evt) {
+  setVisible(loadingBar);
   evt.preventDefault();
   updateCurrentUser(profileNameInput.value, profileDescriptionInput.value)
   .then(res => {
     profileName.textContent = res.name;
     profileDescription.textContent = res.about;
-    closePopup(profilePopup)
+    setInvisible(loadingBar);
+    closePopup(profilePopup);
   })
 }
 
 export function submitNewAvatar(evt) {
-  console.log(evt.target.elements.avatarUrl.value)
-  const input = avatarPopup.querySelector('input');
+  setVisible(loadingBar);
   evt.preventDefault();
   updateCurrentUserAvatar(evt.target.elements.avatarUrl.value)
   .then(res => {
-    console.log(res)
-    avatarEdit.style.backgroundImage = `url('${input.value}')`;
-  })
-  
-  
-  closePopup(avatarPopup);
+    setInvisible(loadingBar);
+    avatarEdit.style.backgroundImage = `url('${res.avatar}')`;
+    closePopup(avatarPopup);
+  }) 
 }
 
 export function setUserData() {

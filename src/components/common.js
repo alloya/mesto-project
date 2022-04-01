@@ -1,10 +1,14 @@
-import { loadingBar } from "./const";
+import { loadingBar, main } from "./const";
 
-export function setMainVisible() {
-  const main = document.querySelector('.main');
-  main.classList.remove('d-none');
+export function setVisible(element) {
+  element.classList.remove('d-none');
 }
 
-export function hideLoadingBar() {
-  loadingBar.classList.add('d-none');
+export function setInvisible(element) {
+  element.classList.add('d-none');
+}
+
+export function flashMain(){
+  setInvisible(main);
+  setVisible(main);
 }

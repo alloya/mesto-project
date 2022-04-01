@@ -1,11 +1,11 @@
 import './index.css';
-import {profilePopup, cardPopup, cardAddButton, profileOpenButton, avatarEdit, avatarPopup, avatarForm, errorObject, formList, formElements} from './components/const';
+import {profilePopup, cardPopup, cardAddButton, profileOpenButton, avatarEdit, avatarPopup, avatarForm, errorObject, formList, formElements, loadingBar, main} from './components/const';
 import {enableValidation} from './components/validate';
 import {openPopup, resetForm} from './components/modal';
 import {submitProfileForm, submitNewAvatar, setUserData, fillUserData} from './components/profile';
 import {initializeCardsList, submitCardForm} from './components/card';
 import {getCurrentUser, getCards} from './components/api';
-import { hideLoadingBar, setMainVisible } from './components/common';
+import { setInvisible, setVisible } from './components/common';
 export let currUser = {};
 
 const userPromise = getCurrentUser();
@@ -14,12 +14,10 @@ const cardsPromise = userPromise.then(res => getCards());
 
 Promise.all([userPromise, cardsPromise]).then(([user, cards]) => { 
   currUser = user;
-  debugger
-
   fillUserData(user);
   initializeCardsList(cards, user._id);
-  hideLoadingBar();
-  setMainVisible();
+  setInvisible(loadingBar);
+  setVisible(main);
 });
 
 profileOpenButton.addEventListener('click', () => {
