@@ -1,5 +1,5 @@
 import { createNewCard, deleteLike, putLike, deleteCard } from './api';
-import { cardPopup, fullImagePopup, cardsContainer, cardTemplate, fullImage, fullImageSubtitle, loadingBar } from './const';
+import { cardPopup, fullImagePopup, cardsContainer, cardTemplate, fullImage, fullImageSubtitle, loadingBar, deletePopup } from './const';
 import { openPopup, closePopup } from './modal';
 import { currUser } from '../index';
 import { resetButtonText, setButtonBlockedState, setInvisible, setVisible } from './common';
@@ -71,14 +71,12 @@ function manageBins(card, binElement, userId) {
     binElement.remove();
     return;
   }
-  binElement.addEventListener('click', removeCard);
+  binElement.addEventListener('click', () => openDeletePopup(card._id));
 }
 
 export function initializeCardsList(cardList, userId) {
   if (cardList.length) {
-    cardList.sort(((a, b) => {
-      return new Date(b.createdAt) - new Date(a.createdAt);
-    })).forEach(el => {
+    cardList.forEach(el => {
       createCard(el, userId)
         .then(cardElement => {
           if (cardElement) {
@@ -114,7 +112,13 @@ function showFullImage(card) {
   openPopup(fullImagePopup);
 }
 
-function removeCard(evt) {
-  deleteCard(evt.target.closest('.card').getAttribute('dataId'))
-    .then(evt.target.closest('.card').remove())
+function openDeletePopup(cardId) {
+  deletePopup.setAttribute('dataid', cardId);
+  openPopup(deletePopup);
 }
+
+export function removeCard(evt) {
+  deleteCard(evt.target.closest('.delete_popup').getAttribute('dataid'))
+    .then(document.querySelector(`[dataid='${evt.target.closest('.delete_popup').getAttribute('dataid')}']`).remove())
+    .then(closePopup(deletePopup))
+  }
