@@ -1,29 +1,40 @@
 import { createNewCard, deleteLike, putLike, deleteCard } from './api';
-import { cardsArray, cardPopup, fullImagePopup, cardsContainer, cardNameInput, cardUrlInput, cardTemplate, fullImage, fullImageSubtitle } from './const';
+import { cardPopup, fullImagePopup, cardsContainer, cardTemplate, fullImage, fullImageSubtitle } from './const';
 import { openPopup, closePopup } from './modal';
-import { toggleButtonState } from './validate';
 import { currUser } from '../index';
-
 
 function createCard(card, userId) {
   const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
-  const cardImage = cardElement.querySelector('.card__picture');
   const cardDelete = cardElement.querySelector('.card__delete');
   const cardLike = cardElement.querySelector('.card__like');
   const likeCounter = cardElement.querySelector('.card__like-counter');
 
   cardElement.querySelector('.card__title').textContent = card.name;
-  cardImage.setAttribute('src', card.link);
-  cardImage.setAttribute('alt', card.name);
   cardElement.setAttribute('dataId', card._id);
 
   manageLikes(cardLike, likeCounter, card);
   manageBins(card, cardDelete, userId);
-
-  cardImage.addEventListener('click', () => showFullImage(cardImage));
   cardLike.addEventListener('click', handleLikeClick, false);
+  return loadImage(card.link)
+    .then(evt => {
+      cardElement.prepend(evt.target);
+      evt.target.setAttribute('alt', card.name);
+      evt.target.addEventListener('click', () => showFullImage(cardElement.querySelector('.card__picture')));
+      return cardElement
+    })
+    .catch(err => {
+      console.log('Image load error ', err.target.src)
+    })
+}
 
-  return cardElement;
+function loadImage(imageSrc) {
+  return new Promise((resolve, reject) => {
+    const image = document.createElement('img');
+    image.classList.add('card__picture');
+    image.src = imageSrc;
+    image.onerror = reject;
+    image.onload = resolve;
+  })
 }
 
 function handleLikeClick(evt) {
@@ -64,9 +75,14 @@ function manageBins(card, binElement, userId) {
 
 export function initializeCardsList(cardList, userId) {
   if (cardList.length) {
-    cardList.slice().reverse().forEach(el => {
-      let cardElement = createCard(el, userId);
-      cardsContainer.prepend(cardElement);
+    cardList.sort(((a,b) => a.createdAt > b.createdAt)).forEach(el => {
+      createCard(el, userId)
+        .then(cardElement => {
+          if (cardElement) {
+            cardsContainer.append(cardElement)
+          }
+        })
+        .catch(err => console.log(err))
     });
   }
 }
@@ -74,13 +90,16 @@ export function initializeCardsList(cardList, userId) {
 export function submitCardForm(evt) {
   evt.preventDefault();
   createNewCard(evt.target.elements.cardName.value, evt.target.elements.cardLink.value)
-    .then(res => {
-      cardsContainer.prepend(createCard(res, currUser._id));
-      closePopup(cardPopup);
-    })
+    .then(res => createCard(res, currUser._id)
+      .then(card => {
+        cardsContainer.prepend(card);
+        closePopup(cardPopup);
+      })
+    )
 }
 
 function showFullImage(card) {
+  debugger
   fullImage.setAttribute('src', card.src);
   fullImage.setAttribute('alt', card.alt);
   fullImageSubtitle.textContent = card.alt;
