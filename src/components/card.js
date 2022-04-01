@@ -1,7 +1,8 @@
 import { createNewCard, deleteLike, putLike, deleteCard } from './api';
-import { cardPopup, fullImagePopup, cardsContainer, cardTemplate, fullImage, fullImageSubtitle } from './const';
+import { cardPopup, fullImagePopup, cardsContainer, cardTemplate, fullImage, fullImageSubtitle, loadingBar } from './const';
 import { openPopup, closePopup } from './modal';
 import { currUser } from '../index';
+import { resetButtonText, setButtonBlockedState, setInvisible, setVisible } from './common';
 
 function createCard(card, userId) {
   const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
@@ -75,7 +76,9 @@ function manageBins(card, binElement, userId) {
 
 export function initializeCardsList(cardList, userId) {
   if (cardList.length) {
-    cardList.sort(((a,b) => a.createdAt > b.createdAt)).forEach(el => {
+    cardList.sort(((a, b) => {
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    })).forEach(el => {
       createCard(el, userId)
         .then(cardElement => {
           if (cardElement) {
@@ -89,21 +92,25 @@ export function initializeCardsList(cardList, userId) {
 
 export function submitCardForm(evt) {
   evt.preventDefault();
+  setVisible(loadingBar);
+  const text = evt.submitter.textContent;
+  setButtonBlockedState(evt.submitter);
   createNewCard(evt.target.elements.cardName.value, evt.target.elements.cardLink.value)
-    .then(res => createCard(res, currUser._id)
-      .then(card => {
-        cardsContainer.prepend(card);
-        closePopup(cardPopup);
-      })
-    )
+    .then(res => createCard(res, currUser._id))
+    .then(card => {
+      cardsContainer.prepend(card);
+    })
+    .finally(res => {
+      setInvisible(loadingBar);
+      closePopup(cardPopup);
+      resetButtonText(evt.submitter, text);
+    });
 }
 
 function showFullImage(card) {
-  debugger
   fullImage.setAttribute('src', card.src);
   fullImage.setAttribute('alt', card.alt);
   fullImageSubtitle.textContent = card.alt;
-
   openPopup(fullImagePopup);
 }
 

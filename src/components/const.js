@@ -41,3 +41,4 @@ export const formElementClass = '.form';
 export const popupList = document.querySelectorAll('.popup');
 export const loadingBar = document.querySelector('.loading-bar');
 export const main = document.querySelector('.main');
+export const btnText = { save: 'Сохранить', saving: 'Сохраняю...', create: 'Создать'}
