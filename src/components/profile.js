@@ -2,7 +2,7 @@ import {profilePopup, profileName, profileDescription, profileNameInput, profile
 import { toggleButtonState } from './validate';
 import { closePopup } from './modal';
 import { getCurrentUser, updateCurrentUser, updateCurrentUserAvatar } from './api';
-import { setInvisible, setVisible, resetButtonText, setButtonBlockedState } from './common';
+import { setInvisible, setVisible, resetButtonText, setButtonBlockedState, handleError } from './common';
 
 
 export function fillUserData(data) {
@@ -21,6 +21,7 @@ export function submitProfileForm(evt) {
     profileName.textContent = res.name;
     profileDescription.textContent = res.about;
   })
+  .catch(err => handleError(err))
   .finally(res => {
     setInvisible(loadingBar);
     closePopup(profilePopup);
@@ -37,6 +38,7 @@ export function submitNewAvatar(evt) {
   .then(res => {
     avatarEdit.style.backgroundImage = `url('${res.avatar}')`;
   }) 
+  .catch(err => handleError(err))
   .finally(res => {
     setInvisible(loadingBar);
     closePopup(avatarPopup);

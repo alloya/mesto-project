@@ -43,3 +43,5 @@ export const loadingBar = document.querySelector('.loading-bar');
 export const main = document.querySelector('.main');
 export const btnText = { save: 'Сохранить', saving: 'Сохраняю...', create: 'Создать'}
 export const deletePopup = document.querySelector('.delete_popup');
+export const errorText = document.querySelector('.error-text');
+export const errorPopup = document.querySelector('.error-popup');

@@ -1,4 +1,5 @@
-import { btnText, formElements, loadingBar, main } from "./const";
+import { btnText, errorPopup, errorText, formElements, loadingBar, main } from "./const";
+import { closePopup, openPopup } from "./modal";
 
 export function setVisible(element) {
   element.classList.remove('d-none');
@@ -26,4 +27,11 @@ export function disableButton(btn) {
 export function enableButton(btn) {
   btn.classList.remove(formElements.buttonInactive);
   btn.removeAttribute('disabled', '');
+}
+
+export function handleError(err) {
+  console.log(err)
+  errorText.textContent = err;
+  openPopup(errorPopup);
+  setTimeout(() => {closePopup(errorPopup)}, 2000);
 }

@@ -2,7 +2,7 @@ import { createNewCard, deleteLike, putLike, deleteCard } from './api';
 import { cardPopup, fullImagePopup, cardsContainer, cardTemplate, fullImage, fullImageSubtitle, loadingBar, deletePopup } from './const';
 import { openPopup, closePopup } from './modal';
 import { currUser } from '../index';
-import { resetButtonText, setButtonBlockedState, setInvisible, setVisible } from './common';
+import { resetButtonText, setButtonBlockedState, setInvisible, setVisible, handleError } from './common';
 
 function createCard(card, userId) {
   const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
@@ -24,7 +24,8 @@ function createCard(card, userId) {
       return cardElement
     })
     .catch(err => {
-      console.log('Image load error ', err.target.src)
+      console.log('Image load error ', err.target.src);
+      handleError(err);
     })
 }
 
@@ -83,7 +84,7 @@ export function initializeCardsList(cardList, userId) {
             cardsContainer.append(cardElement)
           }
         })
-        .catch(err => console.log(err))
+        .catch(err => handleError(err))
     });
   }
 }
@@ -98,6 +99,7 @@ export function submitCardForm(evt) {
     .then(card => {
       cardsContainer.prepend(card);
     })
+    .catch(err => handleError(err))
     .finally(res => {
       setInvisible(loadingBar);
       closePopup(cardPopup);
@@ -121,4 +123,5 @@ export function removeCard(evt) {
   deleteCard(evt.target.closest('.delete_popup').getAttribute('dataid'))
     .then(document.querySelector(`[dataid='${evt.target.closest('.delete_popup').getAttribute('dataid')}']`).remove())
     .then(closePopup(deletePopup))
+    .catch(err => handleError(err))
   }
