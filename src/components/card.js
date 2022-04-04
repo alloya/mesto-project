@@ -25,7 +25,6 @@ function createCard(card, userId) {
     })
     .catch(err => {
       console.log('Image load error ', err.target.src);
-      handleError(err);
     })
 }
 
