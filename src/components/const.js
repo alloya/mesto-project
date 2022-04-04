@@ -1,9 +1,3 @@
-const picture1 = new URL('../images/kirill-pershin-1088404-unsplash.jpg', import.meta.url);
-const picture2 = new URL('../images/kirill-pershin-1404681-unsplash.png', import.meta.url);
-const picture3 = new URL('..//images/kirill-pershin-1556355-unsplash.png', import.meta.url)
-
-export const cardsArray = [ {'name': 'test', 'image': 'https://new-widget.kiwitaxi.com/static/images/Economy.png', 'like': true }, { 'name': 'Карачаевск', 'image': picture1, 'like': false }, { 'name': 'Гора Эльбрус', 'image': picture2, 'like': false }, { 'name': 'Домбай', 'image': picture3, 'like': false }, { 'name': 'Гора Эльбрус', 'image': picture2, 'like': false }, { 'name': 'Карачаевск', 'image': picture1, 'like': true }, { 'name': 'Домбай', 'image': picture3, 'like': false }];
-
 export const profilePopup = document.querySelector(".profile_popup");
 export const cardPopup = document.querySelector(".cards_popup");
 export const fullImagePopup = document.querySelector(".image_popup");
