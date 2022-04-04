@@ -1,3 +1,4 @@
+import { disableButton, enableButton } from "./common";
 import { formElements } from "./const";
 
 const showError = (formElement, inputElement, errorMessage, errorObject) => {
@@ -51,11 +52,9 @@ function hasInvalidInput(inputList) {
 
 export function toggleButtonState(inputList, buttonElement) {
     if (hasInvalidInput(inputList)) {
-        buttonElement.classList.add(formElements.buttonInactive);
-        buttonElement.setAttribute('disabled', '');
+        disableButton(buttonElement);
     }
     else {
-        buttonElement.classList.remove(formElements.buttonInactive);
-        buttonElement.removeAttribute('disabled', '');
+        enableButton(buttonElement)
     }
 }

@@ -1,10 +1,25 @@
 import './index.css';
-import {profilePopup, cardPopup, cardAddButton, profileOpenButton, avatarEdit, avatarPopup, avatarForm, errorObject, formList, formElements} from './components/const';
+import {profilePopup, cardPopup, cardAddButton, profileOpenButton, avatarEdit, avatarPopup, avatarForm, errorObject, formList, formElements, loadingBar, main, deletePopup} from './components/const';
 import {enableValidation} from './components/validate';
-import {openPopup, submitProfileForm, submitNewAvatar, resetForm, setUserData} from './components/modal';
-import {initializeCardsList, submitCardForm} from './components/card';
+import {openPopup, resetForm} from './components/modal';
+import {submitProfileForm, submitNewAvatar, setUserData, fillUserData} from './components/profile';
+import {initializeCardsList, submitCardForm, removeCard} from './components/card';
+import {getCurrentUser, getCards, deleteCard} from './components/api';
+import { setInvisible, setVisible } from './components/common';
+export let currUser = {};
 
-initializeCardsList();
+const userPromise = getCurrentUser();
+
+const cardsPromise = userPromise.then(res => getCards());
+
+Promise.all([userPromise, cardsPromise]).then(([user, cards]) => { 
+  currUser = user;
+  fillUserData(user);
+  initializeCardsList(cards, user._id);
+  setInvisible(loadingBar);
+  setVisible(main);
+});
+
 profileOpenButton.addEventListener('click', () => {
   resetForm(profilePopup);
   setUserData();
@@ -21,5 +36,6 @@ avatarEdit.addEventListener('click', () => {
   openPopup(avatarPopup);
 });
 avatarForm.addEventListener('submit', submitNewAvatar)
+deletePopup.addEventListener('submit', removeCard);
 
 enableValidation(formList, formElements, errorObject);

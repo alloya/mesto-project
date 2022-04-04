@@ -1,7 +1,5 @@
-import {profilePopup, profileName, profileDescription, profileSaveButton, profileNameInput, profileDescriptionInput, avatarEdit, avatarPopup, avatarInput, formElementClass, formElements, errorObject} from './const';
-import { hideError } from './validate';
-import { toggleButtonState } from './validate';
-
+import {formElementClass, formElements, errorObject} from './const';
+import { hideError, toggleButtonState } from './validate';
 
 function closeByEscape(evt) {
   if (evt.key === 'Escape') {
@@ -40,22 +38,5 @@ export function openPopup(popup) {
     toggleButtonState(inputList, form.querySelector(formElements.submitButton));
   }
 
-  export function submitProfileForm(evt) {
-    evt.preventDefault();
-    profileName.textContent = profileNameInput.value;
-    profileDescription.textContent = profileDescriptionInput.value;
-    closePopup(profilePopup);
-  }
 
-  export function submitNewAvatar(evt) {
-    evt.preventDefault();
-    avatarEdit.style.backgroundImage = `url('${avatarInput.value}')`;
-    closePopup(avatarPopup);
-  }
-
-  export function setUserData() {
-    profileNameInput.value = profileName.textContent;
-    profileDescriptionInput.value = profileDescription.textContent;
-    toggleButtonState([profileNameInput, profileDescriptionInput], profileSaveButton);
-  }
 

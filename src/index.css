@@ -39,3 +39,9 @@
 @import url("./blocks/form/__input-error/_active/form__input-error_active.css");
 @import url("./blocks/form/__field/form__field.css");
 @import url("./blocks/button/button_inactive.css");
+@import url("./blocks/card/__like-counter/card__like-counter.css");
+@import url("./blocks/card/__like-wrapper/card__like-wrapper.css");
+@import url("./blocks/loading-bar/loading-bar.css");
+@import url("./blocks/d-none/d-none.css");
+@import url("./blocks/popup/__title/popup__title_delete.css");
+@import url("./blocks/error-text/error-text.css");

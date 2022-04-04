@@ -1,6 +1,7 @@
 .main {
   padding: 0 200px 0;
   box-sizing: border-box;
+  transition: visibility 0s, opacity 2s linear;
 }
 
 @media (max-width: 1068px) {
