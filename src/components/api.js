@@ -1,17 +1,19 @@
 export const auth = {token: '100a0a32-f941-4db8-a158-a769d9d537de', groupId: 'plus-cohort-8', apiUrl: 'https://nomoreparties.co/v1/'};
 
+function handleResponse(res) {
+  if (!res.ok) {
+    return Promise.reject(`Ошибка: ${res.status}`);
+  }
+  return res.json();
+}
+
 export function getCards() {
   return fetch(`${auth.apiUrl}${auth.groupId}/cards`, {
     headers: {
       authorization: auth.token
     }
   })
-  .then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  })
+  .then(handleResponse);
 }
 
 export function getCurrentUser() {
@@ -20,12 +22,7 @@ export function getCurrentUser() {
       authorization: auth.token
     }
   })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
+  .then(handleResponse);
 }
 
 export function updateCurrentUser(name, about) {
@@ -40,12 +37,7 @@ export function updateCurrentUser(name, about) {
       about: about
     })
   })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
+  .then(handleResponse);
 }
 
 export function updateCurrentUserAvatar(avatarSrc) {
@@ -59,12 +51,7 @@ export function updateCurrentUserAvatar(avatarSrc) {
       avatar: avatarSrc
     })
   })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
+  .then(handleResponse);
 }
 
 export function putLike(cardId) {
@@ -74,12 +61,7 @@ export function putLike(cardId) {
       authorization: auth.token
     }
   })
-  .then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  })
+  .then(handleResponse);
 }
 
 export function deleteLike(cardId) {
@@ -89,12 +71,7 @@ export function deleteLike(cardId) {
       authorization: auth.token
     }
   })
-  .then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  })
+  .then(handleResponse);
 }
 
 export function createNewCard(cardName, cardLink) {
@@ -109,12 +86,7 @@ export function createNewCard(cardName, cardLink) {
       link: cardLink
     })
   })
-    .then(res => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
+  .then(handleResponse);
 }
 
 export function deleteCard(cardId) {
@@ -124,10 +96,5 @@ export function deleteCard(cardId) {
       authorization: auth.token
     }
   })
-  .then(res => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  })
+  .then(handleResponse);
 }

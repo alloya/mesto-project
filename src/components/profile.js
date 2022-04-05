@@ -20,11 +20,11 @@ export function submitProfileForm(evt) {
   .then(res => {
     profileName.textContent = res.name;
     profileDescription.textContent = res.about;
+    closePopup(profilePopup);
   })
   .catch(err => handleError(err))
   .finally(res => {
     setInvisible(loadingBar);
-    closePopup(profilePopup);
     resetButtonText(evt.submitter, text);
   });
 }
@@ -37,11 +37,11 @@ export function submitNewAvatar(evt) {
   updateCurrentUserAvatar(evt.target.elements.avatarUrl.value)
   .then(res => {
     avatarEdit.style.backgroundImage = `url('${res.avatar}')`;
+    closePopup(avatarPopup);
   }) 
   .catch(err => handleError(err))
   .finally(res => {
     setInvisible(loadingBar);
-    closePopup(avatarPopup);
     resetButtonText(evt.submitter, text);
   });
 }
