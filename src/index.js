@@ -30,7 +30,9 @@ cardAddButton.addEventListener('click', () => {
   resetForm(cardPopup);
   openPopup(cardPopup);
 });
-cardPopup.addEventListener('submit', submitCardForm);
+cardPopup.addEventListener('submit', (evt) => {
+  submitCardForm(evt, currUser._id)
+});
 avatarEdit.addEventListener('click', () => {
   resetForm(avatarPopup);
   openPopup(avatarPopup);

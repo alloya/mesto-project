@@ -1,7 +1,6 @@
 import { createNewCard, deleteLike, putLike, deleteCard } from './api';
 import { cardPopup, fullImagePopup, cardsContainer, cardTemplate, fullImage, fullImageSubtitle, loadingBar, deletePopup } from './const';
 import { openPopup, closePopup } from './modal';
-import { currUser } from '../index';
 import { resetButtonText, setButtonBlockedState, setInvisible, setVisible, handleError } from './common';
 
 function createCard(card, userId) {
@@ -13,9 +12,11 @@ function createCard(card, userId) {
   cardElement.querySelector('.card__title').textContent = card.name;
   cardElement.setAttribute('dataId', card._id);
 
-  manageLikes(cardLike, likeCounter, card);
+  manageLikes(cardLike, likeCounter, card, userId);
   manageBins(card, cardDelete, userId);
-  cardLike.addEventListener('click', handleLikeClick, false);
+  cardLike.addEventListener('click', (evt) => {
+    handleLikeClick(evt, userId)
+  }, false);
   return loadImage(card.link)
     .then(evt => {
       cardElement.prepend(evt.target);
@@ -38,24 +39,35 @@ function loadImage(imageSrc) {
   })
 }
 
-function handleLikeClick(evt) {
+function handleLikeClick(evt, userId) {
+  setVisible(loadingBar);
   evt.target.setAttribute('disabled', '');
   if (evt.target.getAttribute('like') == "true") {
     deleteLike(evt.target.closest('.card').getAttribute('dataId'))
       .then(res => {
-        manageLikes(evt.target, evt.target.nextElementSibling, res);
-        evt.target.removeAttribute('disabled', '');
+        manageLikes(evt.target, evt.target.nextElementSibling, res, userId);
       })
+      .catch(err => handleError(err))
+      .finally(() => {
+        evt.target.removeAttribute('disabled', '');
+        setInvisible(loadingBar);
+      });
   }
   else {
     putLike(evt.target.closest('.card').getAttribute('dataId'))
-      .then(res => manageLikes(evt.target, evt.target.nextElementSibling, res));
-    evt.target.removeAttribute('disabled', '');
+      .then(res => {
+        manageLikes(evt.target, evt.target.nextElementSibling, res, userId)
+      })
+      .catch(err => handleError(err))
+      .finally(() => {
+        evt.target.removeAttribute('disabled', '');
+        setInvisible(loadingBar);
+      });
   }
 }
 
-function manageLikes(likeElement, likeCounter, card) {
-  if (card.likes.some((like => like._id == currUser._id))) {
+function manageLikes(likeElement, likeCounter, card, userId) {
+  if (card.likes.some((like => like._id == userId))) {
     likeElement.classList.add('card__like_inverted');
     likeElement.setAttribute('like', true);
   }
@@ -88,13 +100,13 @@ export function initializeCardsList(cardList, userId) {
   }
 }
 
-export function submitCardForm(evt) {
+export function submitCardForm(evt, userId) {
   evt.preventDefault();
   setVisible(loadingBar);
   const text = evt.submitter.textContent;
   setButtonBlockedState(evt.submitter);
   createNewCard(evt.target.elements.cardName.value, evt.target.elements.cardLink.value)
-    .then(res => createCard(res, currUser._id))
+    .then(res => createCard(res, userId))
     .then(card => {
       cardsContainer.prepend(card);
       closePopup(cardPopup);
@@ -118,9 +130,14 @@ function openDeletePopup(cardId) {
   openPopup(deletePopup);
 }
 
+function deleteCardFromDom(card) {
+  card.remove();
+  card = null;
+} 
+
 export function removeCard(evt) {
   deleteCard(evt.target.closest('.delete_popup').getAttribute('dataid'))
-    .then(document.querySelector(`[dataid='${evt.target.closest('.delete_popup').getAttribute('dataid')}']`).remove())
+    .then(deleteCardFromDom(document.querySelector(`[dataid='${evt.target.closest('.delete_popup').getAttribute('dataid')}']`)))
     .then(closePopup(deletePopup))
     .catch(err => handleError(err))
   }
