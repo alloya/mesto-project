@@ -97,11 +97,11 @@ export function submitCardForm(evt) {
     .then(res => createCard(res, currUser._id))
     .then(card => {
       cardsContainer.prepend(card);
+      closePopup(cardPopup);
     })
     .catch(err => handleError(err))
     .finally(res => {
       setInvisible(loadingBar);
-      closePopup(cardPopup);
       resetButtonText(evt.submitter, text);
     });
 }
