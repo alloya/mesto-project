@@ -1,11 +1,12 @@
 import './index.css';
-import {profilePopup, cardPopup, cardAddButton, profileOpenButton, avatarEdit, avatarPopup, avatarForm, errorObject, formList, formElements, loadingBar, main, deletePopup} from './components/const';
+import {profilePopup, cardPopup, cardAddButton, profileOpenButton, avatarEdit, avatarPopup, avatarForm, errorObject, formList, formElements, loadingBar, main, deletePopup, cardsContainer} from './components/const';
 import {enableValidation} from './components/validate';
 import {openPopup, resetForm} from './components/modal';
 import {submitProfileForm, submitNewAvatar, setUserData, fillUserData} from './components/profile';
-import {initializeCardsList, submitCardForm, removeCard} from './components/card';
-import {getCurrentUser, getCards, deleteCard} from './components/api';
-import { setInvisible, setVisible } from './components/common';
+import {createCard} from './components/card';
+import { getCurrentUser, getCards } from './components/api';
+import { setInvisible, setVisible, handleError } from './components/common';
+import { initializeCardsList, submitCardForm, removeCard } from './components/cardActions'
 export let currUser = {};
 
 const userPromise = getCurrentUser();

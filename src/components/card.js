@@ -1,9 +1,8 @@
-import { createNewCard, deleteLike, putLike, deleteCard } from './api';
-import { cardPopup, fullImagePopup, cardsContainer, cardTemplate, fullImage, fullImageSubtitle, loadingBar, deletePopup } from './const';
-import { openPopup, closePopup } from './modal';
-import { resetButtonText, setButtonBlockedState, setInvisible, setVisible, handleError } from './common';
+import { fullImagePopup, cardsContainer, cardTemplate, fullImage, fullImageSubtitle, deletePopup } from './const';
+import { openPopup } from './modal';
+import { handleLikeClick } from './cardActions';
 
-function createCard(card, userId) {
+export function createCard(card, userId) {
   const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
   const cardDelete = cardElement.querySelector('.card__delete');
   const cardLike = cardElement.querySelector('.card__like');
@@ -39,34 +38,7 @@ function loadImage(imageSrc) {
   })
 }
 
-function handleLikeClick(evt, userId) {
-  setVisible(loadingBar);
-  evt.target.setAttribute('disabled', '');
-  if (evt.target.getAttribute('like') == "true") {
-    deleteLike(evt.target.closest('.card').getAttribute('dataId'))
-      .then(res => {
-        manageLikes(evt.target, evt.target.nextElementSibling, res, userId);
-      })
-      .catch(err => handleError(err))
-      .finally(() => {
-        evt.target.removeAttribute('disabled', '');
-        setInvisible(loadingBar);
-      });
-  }
-  else {
-    putLike(evt.target.closest('.card').getAttribute('dataId'))
-      .then(res => {
-        manageLikes(evt.target, evt.target.nextElementSibling, res, userId)
-      })
-      .catch(err => handleError(err))
-      .finally(() => {
-        evt.target.removeAttribute('disabled', '');
-        setInvisible(loadingBar);
-      });
-  }
-}
-
-function manageLikes(likeElement, likeCounter, card, userId) {
+export function manageLikes(likeElement, likeCounter, card, userId) {
   if (card.likes.some((like => like._id == userId))) {
     likeElement.classList.add('card__like_inverted');
     likeElement.setAttribute('like', true);
@@ -86,38 +58,6 @@ function manageBins(card, binElement, userId) {
   binElement.addEventListener('click', () => openDeletePopup(card._id));
 }
 
-export function initializeCardsList(cardList, userId) {
-  if (cardList.length) {
-    cardList.forEach(el => {
-      createCard(el, userId)
-        .then(cardElement => {
-          if (cardElement) {
-            cardsContainer.append(cardElement)
-          }
-        })
-        .catch(err => handleError(err))
-    });
-  }
-}
-
-export function submitCardForm(evt, userId) {
-  evt.preventDefault();
-  setVisible(loadingBar);
-  const text = evt.submitter.textContent;
-  setButtonBlockedState(evt.submitter);
-  createNewCard(evt.target.elements.cardName.value, evt.target.elements.cardLink.value)
-    .then(res => createCard(res, userId))
-    .then(card => {
-      cardsContainer.prepend(card);
-      closePopup(cardPopup);
-    })
-    .catch(err => handleError(err))
-    .finally(res => {
-      setInvisible(loadingBar);
-      resetButtonText(evt.submitter, text);
-    });
-}
-
 function showFullImage(card) {
   fullImage.setAttribute('src', card.src);
   fullImage.setAttribute('alt', card.alt);
@@ -130,14 +70,8 @@ function openDeletePopup(cardId) {
   openPopup(deletePopup);
 }
 
-function deleteCardFromDom(card) {
+export function deleteCardFromDom(card) {
   card.remove();
   card = null;
-} 
+}
 
-export function removeCard(evt) {
-  deleteCard(evt.target.closest('.delete_popup').getAttribute('dataid'))
-    .then(deleteCardFromDom(document.querySelector(`[dataid='${evt.target.closest('.delete_popup').getAttribute('dataid')}']`)))
-    .then(closePopup(deletePopup))
-    .catch(err => handleError(err))
-  }

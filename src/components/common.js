@@ -1,4 +1,4 @@
-import { btnText, errorPopup, errorText, formElements, loadingBar, main } from "./const";
+import { btnText, errorPopup, errorText, formElements } from "./const";
 import { closePopup, openPopup } from "./modal";
 
 export function setVisible(element) {
