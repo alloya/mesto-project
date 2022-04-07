@@ -1,6 +1,8 @@
-import { fullImagePopup, cardsContainer, cardTemplate, fullImage, fullImageSubtitle, deletePopup } from './const';
+import { fullImagePopup, cardTemplate, fullImage, fullImageSubtitle } from './const';
 import { openPopup } from './modal';
-import { handleLikeClick } from './cardActions';
+import { handleLikeClick, removeCard } from './cardActions';
+
+
 
 export function createCard(card, userId, loadedImgElement) {
   const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
@@ -13,12 +15,11 @@ export function createCard(card, userId, loadedImgElement) {
 
   cardElement.prepend(cardImg);
   cardElement.querySelector('.card__title').textContent = card.name;
-  cardElement.setAttribute('dataId', card._id);
 
   manageLikes(cardLike, likeCounter, card, userId);
-  manageBins(card, cardDelete, userId);
+  manageBins(card, cardDelete, userId, cardElement);
   cardLike.addEventListener('click', (evt) => {
-    handleLikeClick(evt, userId)
+    handleLikeClick(evt, card._id, userId)
   }, false);
   return cardElement;
 }
@@ -42,12 +43,12 @@ export function manageLikes(likeElement, likeCounter, card, userId) {
   likeCounter.textContent = card.likes && card.likes.length || 0;
 }
 
-function manageBins(card, binElement, userId) {
+function manageBins(card, binElement, userId, cardElement) {
   if (card.owner._id != userId) {
     binElement.remove();
     return;
   }
-  binElement.addEventListener('click', () => openDeletePopup(card._id));
+  binElement.addEventListener('click', () => removeCard(card._id, cardElement));
 }
 
 function showFullImage(card) {
@@ -57,13 +58,7 @@ function showFullImage(card) {
   openPopup(fullImagePopup);
 }
 
-function openDeletePopup(cardId) {
-  deletePopup.setAttribute('dataid', cardId);
-  openPopup(deletePopup);
-}
-
 export function deleteCardFromDom(card) {
   card.remove();
   card = null;
 }
-

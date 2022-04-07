@@ -38,7 +38,7 @@ avatarEdit.addEventListener('click', () => {
   resetForm(avatarPopup);
   openPopup(avatarPopup);
 });
-avatarForm.addEventListener('submit', submitNewAvatar)
-deletePopup.addEventListener('submit', removeCard);
+avatarForm.addEventListener('submit', submitNewAvatar);
+
 
 enableValidation(formList, formElements, errorObject);

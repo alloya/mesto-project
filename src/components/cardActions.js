@@ -2,13 +2,15 @@ import { cardPopup, cardsContainer, loadingBar, deletePopup } from './const';
 import { createCard, manageLikes, deleteCardFromDom, createImg } from "./card";
 import { handleError, setInvisible, setVisible, setButtonBlockedState, resetButtonText } from "./common";
 import { createNewCard, deleteLike, putLike, deleteCard } from './api';
-import { closePopup } from './modal';
+import { openPopup, closePopup } from './modal';
+let cardToDelete;
+let cardIdToDelete;
 
-export function handleLikeClick(evt, userId) {
+export function handleLikeClick(evt, cardId, userId) {
   setVisible(loadingBar);
   evt.target.setAttribute('disabled', '');
   if (evt.target.getAttribute('like') == "true") {
-    deleteLike(evt.target.closest('.card').getAttribute('dataId'))
+    deleteLike(cardId)
       .then(res => {
         manageLikes(evt.target, evt.target.nextElementSibling, res, userId);
       })
@@ -19,7 +21,7 @@ export function handleLikeClick(evt, userId) {
       });
   }
   else {
-    putLike(evt.target.closest('.card').getAttribute('dataId'))
+    putLike(cardId)
       .then(res => {
         manageLikes(evt.target, evt.target.nextElementSibling, res, userId)
       })
@@ -67,13 +69,27 @@ export function submitCardForm(evt, userId) {
     });
 }
 
-export function removeCard(evt) {
-  deleteCard(evt.target.closest('.delete_popup').getAttribute('dataid'))
-    .then(deleteCardFromDom(document.querySelector(`[dataid='${evt.target.closest('.delete_popup').getAttribute('dataid')}']`)))
+// export function removeCard(cardId) {
+//   deleteCard(cardId)
+//     .then(deleteCardFromDom(document.querySelector(`[dataid='${evt.target.closest('.delete_popup').getAttribute('dataid')}']`)))
+//     .then(closePopup(deletePopup))
+//     .catch(err => handleError(err))
+// }
+
+export function removeCard(cardId, card) {
+  cardToDelete = card;
+  cardIdToDelete = cardId;
+  deletePopup.removeEventListener('submit', deleteCardHandler);
+  openPopup(deletePopup);
+  deletePopup.addEventListener('submit', deleteCardHandler);
+}
+
+function deleteCardHandler() {
+  deleteCard(cardIdToDelete)
+    .then(deleteCardFromDom(cardToDelete))
     .then(closePopup(deletePopup))
     .catch(err => handleError(err))
 }
-
 
 function loadImage(imageSrc) {
   return new Promise((resolve, reject) => {
