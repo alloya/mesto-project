@@ -69,13 +69,6 @@ export function submitCardForm(evt, userId) {
     });
 }
 
-// export function removeCard(cardId) {
-//   deleteCard(cardId)
-//     .then(deleteCardFromDom(document.querySelector(`[dataid='${evt.target.closest('.delete_popup').getAttribute('dataid')}']`)))
-//     .then(closePopup(deletePopup))
-//     .catch(err => handleError(err))
-// }
-
 export function removeCard(cardId, card) {
   cardToDelete = card;
   cardIdToDelete = cardId;
