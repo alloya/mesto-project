@@ -2,12 +2,16 @@ import { fullImagePopup, cardsContainer, cardTemplate, fullImage, fullImageSubti
 import { openPopup } from './modal';
 import { handleLikeClick } from './cardActions';
 
-export function createCard(card, userId) {
+export function createCard(card, userId, loadedImgElement) {
   const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
   const cardDelete = cardElement.querySelector('.card__delete');
   const cardLike = cardElement.querySelector('.card__like');
   const likeCounter = cardElement.querySelector('.card__like-counter');
+  const cardImg = loadedImgElement || createImg(card.link);
+  cardImg.addEventListener('click', () => showFullImage(cardElement.querySelector('.card__picture')));
+  cardImg.setAttribute('alt', card.name);
 
+  cardElement.prepend(cardImg);
   cardElement.querySelector('.card__title').textContent = card.name;
   cardElement.setAttribute('dataId', card._id);
 
@@ -16,26 +20,14 @@ export function createCard(card, userId) {
   cardLike.addEventListener('click', (evt) => {
     handleLikeClick(evt, userId)
   }, false);
-  return loadImage(card.link)
-    .then(evt => {
-      cardElement.prepend(evt.target);
-      evt.target.setAttribute('alt', card.name);
-      evt.target.addEventListener('click', () => showFullImage(cardElement.querySelector('.card__picture')));
-      return cardElement
-    })
-    .catch(err => {
-      console.log('Image load error ', err.target.src);
-    })
+  return cardElement;
 }
 
-function loadImage(imageSrc) {
-  return new Promise((resolve, reject) => {
-    const image = document.createElement('img');
-    image.classList.add('card__picture');
-    image.src = imageSrc;
-    image.onerror = reject;
-    image.onload = resolve;
-  })
+export function createImg(imageSrc) {
+  const image = document.createElement('img');
+  image.src = imageSrc;
+  image.classList.add('card__picture');
+  return image;
 }
 
 export function manageLikes(likeElement, likeCounter, card, userId) {

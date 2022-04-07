@@ -30,8 +30,8 @@ export function enableButton(btn) {
 }
 
 export function handleError(err) {
-  console.log(err)
-  errorText.textContent = err;
+  console.log(err.message || err)
+  errorText.textContent = err && err.message || err;
   openPopup(errorPopup);
   setTimeout(() => {closePopup(errorPopup)}, 2000);
 }
