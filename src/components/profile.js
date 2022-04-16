@@ -1,7 +1,7 @@
 import {profilePopup, profileName, profileDescription, profileNameInput, profileDescriptionInput, avatarEdit, avatarPopup, profileSaveButton, loadingBar} from './const';
 import { toggleButtonState } from './validate';
 import { closePopup } from './modal';
-import { updateCurrentUser, updateCurrentUserAvatar } from './api';
+import { updateCurrentUser, updateCurrentUserAvatar } from './Api';
 import { setInvisible, setVisible, resetButtonText, setButtonBlockedState, handleError } from './common';
 
 

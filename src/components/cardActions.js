@@ -1,15 +1,19 @@
 import { cardPopup, cardsContainer, loadingBar, deletePopup } from './const';
-import { createCard, manageLikes, deleteCardFromDom, createImg } from "./card";
+import { createCard, manageLikes, deleteCardFromDom, createImg } from "./Card";
 import { handleError, setInvisible, setVisible, setButtonBlockedState, resetButtonText } from "./common";
-import { createNewCard, deleteLike, putLike, deleteCard } from './api';
+import Api, { createNewCard, deleteLike, putLike, deleteCard } from './Api';
 import { openPopup, closePopup } from './modal';
+import Card from './Card';
+
+
 let cardToDelete;
 let cardIdToDelete;
+
 
 export function handleLikeClick(evt, cardId, userId) {
   setVisible(loadingBar);
   evt.target.setAttribute('disabled', '');
-  if (evt.target.getAttribute('like') == "true") {
+  if (evt.target.classList.contains('card__like_inverted')) {
     deleteLike(cardId)
       .then(res => {
         manageLikes(evt.target, evt.target.nextElementSibling, res, userId);
@@ -36,7 +40,7 @@ export function handleLikeClick(evt, cardId, userId) {
 export function initializeCardsList(cardList, userId) {
   if (cardList.length) {
     cardList.forEach(el => {
-      cardsContainer.append(createCard(el, userId, null))
+      cardsContainer.append(card.createCard(el, userId, null))
     });
   }
 }
@@ -47,7 +51,7 @@ export function submitCardForm(evt, userId) {
   const text = evt.submitter.textContent;
   setButtonBlockedState(evt.submitter);
   const loadPromise = loadImage(evt.target.elements.cardLink.value)
-    .then(res => {return res.target});
+    .then(res => { return res.target });
   const postCardPromise = loadPromise
     .then(res =>
       res && createNewCard(evt.target.elements.cardName.value, evt.target.elements.cardLink.value))

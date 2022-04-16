@@ -3,15 +3,20 @@ import {profilePopup, cardPopup, cardAddButton, profileOpenButton, avatarEdit, a
 import {enableValidation} from './components/validate';
 import {openPopup, resetForm} from './components/modal';
 import {submitProfileForm, submitNewAvatar, setUserData, fillUserData} from './components/profile';
-import {createCard} from './components/card';
-import { getCurrentUser, getCards } from './components/api';
+import {createCard} from './components/Card';
+import { getCurrentUser, getCards } from './components/Api';
 import { setInvisible, setVisible, handleError } from './components/common';
-import { initializeCardsList, submitCardForm, removeCard } from './components/cardActions'
+import { submitCardForm, removeCard } from './components/cardActions';
+import Card from './components/Card';
+import Api from './components/Api';
 export let currUser = {};
+export const auth = { token: '100a0a32-f941-4db8-a158-a769d9d537de', apiUrl: 'https://nomoreparties.co/v1/plus-cohort-8' };
+console.log(auth);
+const api = new Api(auth);
 
 const userPromise = getCurrentUser();
 
-const cardsPromise = userPromise.then(res => getCards());
+const cardsPromise = userPromise.then(res => api.getCards());
 
 Promise.all([userPromise, cardsPromise]).then(([user, cards]) => { 
   currUser = user;
@@ -20,6 +25,15 @@ Promise.all([userPromise, cardsPromise]).then(([user, cards]) => {
   setInvisible(loadingBar);
   setVisible(main);
 });
+
+function initializeCardsList(cardList, userId) {
+  if (cardList.length) {
+    cardList.forEach(el => {
+      const card = new Card(el, userId, '#card-template', null)
+      cardsContainer.append(card.createCard())
+    });
+  }
+}
 
 profileOpenButton.addEventListener('click', () => {
   resetForm(profilePopup);

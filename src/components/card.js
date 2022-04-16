@@ -1,8 +1,94 @@
-import { fullImagePopup, cardTemplate, fullImage, fullImageSubtitle } from './const';
+import { fullImagePopup, cardTemplate, fullImage, fullImageSubtitle, auth } from './const';
 import { openPopup } from './modal';
 import { handleLikeClick, removeCard } from './cardActions';
+import Api from './Api';
+const api = new Api(auth);
+
+export default class Card {
+  constructor(card, currentUserId, selector, loadedImgElement) {
+    this._userId = currentUserId;
+    this._selector = selector;
+    this._imgElement = loadedImgElement;
+    this._card = card;
+    this._link = card.link;
+    this._likeCounter;
+    this._cardLike;
 
 
+  }
+
+  getCardId() {
+    return this._card._id;
+  }
+
+  _getTemplate() {
+    const card = document.querySelector(this._selector).content.querySelector('.card').cloneNode(true);
+    return card;
+  }
+
+  createCard() {
+    this._cardElement = this._getTemplate();
+    this._cardDelete = this._cardElement.querySelector('.card__delete');
+    this._cardLike = this._cardElement.querySelector('.card__like');
+    this._likeCounter = this._cardElement.querySelector('.card__like-counter');
+    this._cardImg = this._createImg(this._link);
+    this._manageLikes(this._card);
+    this._setEventListeners();
+
+    return this._cardElement;
+  }
+
+  isLiked() {
+
+  }
+
+  deleteCardFromDom() {
+
+  }
+
+  _setEventListeners() {
+    this._cardLike.addEventListener('click', (evt) => this._handleLikeClick(evt, this.getCardId()));
+  }
+
+  _createImg(imageSrc) {
+    const image = document.createElement('img');
+    image.src = imageSrc;
+    image.classList.add('card__picture');
+    return image;
+  }
+
+  _manageLikes(card) {
+    this._card.likes.some((like => like._id == this._userId))
+      ? this._cardLike.classList.add('card__like_inverted')
+      : this._cardLike.classList.remove('card__like_inverted');
+    this._likeCounter.textContent = card.likes && card.likes.length || 0;
+  }
+
+  _handleLikeClick(evt, cardId) {
+    evt.target.setAttribute('disabled', '');
+    if (evt.target.classList.contains('card__like_inverted')) {
+      api.deleteLike(cardId)
+        .then(cardResponse => {
+          this._manageLikes(evt.target, evt.target.nextElementSibling, cardResponse, this._userId);
+        })
+        .catch(err => handleError(err))
+        .finally(() => {
+          evt.target.removeAttribute('disabled', '');
+        });
+    }
+    else {
+      api.putLike(cardId)
+        .then(cardResponse => {
+          this._manageLikes(evt.target, evt.target.nextElementSibling, cardResponse, this._userId)
+        })
+        .catch(err => handleError(err))
+        .finally(() => {
+          evt.target.removeAttribute('disabled', '');
+        });
+    }
+  }
+
+}
 
 export function createCard(card, userId, loadedImgElement) {
   const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
@@ -32,14 +118,18 @@ export function createImg(imageSrc) {
 }
 
 export function manageLikes(likeElement, likeCounter, card, userId) {
-  if (card.likes.some((like => like._id == userId))) {
-    likeElement.classList.add('card__like_inverted');
-    likeElement.setAttribute('like', true);
-  }
-  else {
-    likeElement.classList.remove('card__like_inverted');
-    likeElement.setAttribute('like', false);
-  }
+  card.likes.some((like => like._id == userId))
+    ? likeElement.classList.add('card__like_inverted')
+    : likeElement.classList.remove('card__like_inverted');
+
+  // if (card.likes.some((like => like._id == userId))) {
+  //   likeElement.classList.add('card__like_inverted');
+  //   likeElement.setAttribute('like', true);
+  // }
+  // else {
+  //   likeElement.classList.remove('card__like_inverted');
+  //   likeElement.setAttribute('like', false);
+  // }
   likeCounter.textContent = card.likes && card.likes.length || 0;
 }
 

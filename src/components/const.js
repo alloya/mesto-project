@@ -1,3 +1,4 @@
+export const auth = { token: '100a0a32-f941-4db8-a158-a769d9d537de', apiUrl: 'https://nomoreparties.co/v1/plus-cohort-8' };
 export const profilePopup = document.querySelector(".profile_popup");
 export const cardPopup = document.querySelector(".cards_popup");
 export const fullImagePopup = document.querySelector(".image_popup");
