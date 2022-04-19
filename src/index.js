@@ -4,17 +4,16 @@ import {enableValidation} from './components/validate';
 import {openPopup, resetForm} from './components/modal';
 import {submitProfileForm, submitNewAvatar, setUserData, fillUserData} from './components/profile';
 import {createCard} from './components/Card';
-import { getCurrentUser, getCards } from './components/Api';
+// import { getCurrentUser, getCards } from './components/Api';
 import { setInvisible, setVisible, handleError } from './components/common';
 import { submitCardForm, removeCard } from './components/cardActions';
 import Card from './components/Card';
 import Api from './components/Api';
 export let currUser = {};
 export const auth = { token: '100a0a32-f941-4db8-a158-a769d9d537de', apiUrl: 'https://nomoreparties.co/v1/plus-cohort-8' };
-console.log(auth);
 const api = new Api(auth);
 
-const userPromise = getCurrentUser();
+const userPromise = api.getCurrentUser();
 
 const cardsPromise = userPromise.then(res => api.getCards());
 
