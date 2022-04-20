@@ -1,5 +1,5 @@
-import {formElementClass, formElements, errorObject} from './const';
-import { hideError, toggleButtonState } from './validate';
+import {formElementClass, formElements} from './const';
+// import { hideError, toggleButtonState } from './validate';
 
 function closeByEscape(evt) {
   if (evt.key === 'Escape') {
@@ -33,9 +33,9 @@ export function openPopup(popup) {
   export function resetForm(popup) {
     const form = popup.querySelector(formElementClass);
     form.reset();
-    const inputList = Array.from(form.querySelectorAll(formElements.input));
-    inputList.forEach(input => hideError(form, input, errorObject));
-    toggleButtonState(inputList, form.querySelector(formElements.submitButton));
+    // const inputList = Array.from(form.querySelectorAll(formElements.input));
+    // inputList.forEach(input => hideError(form, input, errorObject));
+    // toggleButtonState(inputList, form.querySelector(formElements.submitButton));
   }
 
 
