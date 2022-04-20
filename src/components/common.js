@@ -1,5 +1,4 @@
 import { btnText, errorPopup, errorText, formElements } from "./const";
-import { closePopup, openPopup } from "./modal";
 
 export function setVisible(element) {
   element.classList.remove('d-none');
@@ -32,6 +31,6 @@ export function enableButton(btn) {
 export function handleError(err) {
   console.log(err.message || err)
   errorText.textContent = err && err.message || err;
-  openPopup(errorPopup);
+  errorPopup.open();
   setTimeout(() => {closePopup(errorPopup)}, 2000);
 }

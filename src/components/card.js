@@ -1,5 +1,5 @@
-import { fullImagePopup, cardTemplate, fullImage, fullImageSubtitle, auth } from './const';
-import { openPopup } from './modal';
+import {fullImagePopup, cardTemplate, fullImage, fullImageSubtitle, auth, popupWithFullImage} from './const';
+// import { openPopup } from './modal';
 import { handleLikeClick, removeCard } from './cardActions';
 import Api from './Api';
 const api = new Api(auth);
@@ -51,7 +51,7 @@ export default class Card {
 
   _setEventListeners() {
     this._cardLike.addEventListener('click', (evt) => this._handleLikeClick(evt, this.getCardId()));
-    this._cardImg.addEventListener('click', () => this._showFullImage(this._cardElement.querySelector('.card__picture')));
+    this._cardImg.addEventListener('click', () => this._showFullImage());
   }
 
   _createImg(imageSrc) {
@@ -100,11 +100,13 @@ export default class Card {
     this._cardDelete.addEventListener('click', () => removeCard(this._card._id, this._cardElement));
   }
 
-  _showFullImage(card) {
-    fullImage.setAttribute('src', card.src);
-    fullImage.setAttribute('alt', card.alt);
-    fullImageSubtitle.textContent = card.alt;
-    openPopup(fullImagePopup);
+  _showFullImage() {
+    const card = {
+      url: this._link,
+      name: this._card.name
+    }
+    popupWithFullImage.open(card);
+    popupWithFullImage.setEventListeners();
   }
 
 

@@ -1,6 +1,18 @@
-import {profilePopup, profileName, profileDescription, profileNameInput, profileDescriptionInput, avatarEdit, avatarPopup, profileSaveButton, loadingBar, auth} from './const';
+import {
+  profilePopup,
+  profileName,
+  profileDescription,
+  profileNameInput,
+  profileDescriptionInput,
+  avatarEdit,
+  avatarPopup,
+  profileSaveButton,
+  loadingBar,
+  auth,
+  profileEditPopup, avatarEditPopup
+} from './const';
 import { toggleButtonState } from './validate';
-import { closePopup } from './modal';
+// import { closePopup } from './modal';
 // import { updateCurrentUser, updateCurrentUserAvatar } from './Api';
 import Api from './Api';
 import { setInvisible, setVisible, resetButtonText, setButtonBlockedState, handleError } from './common';
@@ -21,7 +33,7 @@ export function submitProfileForm(evt) {
   .then(res => {
     profileName.textContent = res.name;
     profileDescription.textContent = res.about;
-    closePopup(profilePopup);
+    profileEditPopup.close();
   })
   .catch(err => handleError(err))
   .finally(res => {
@@ -38,7 +50,7 @@ export function submitNewAvatar(evt) {
   api.updateCurrentUserAvatar(evt.target.elements.avatarUrl.value)
   .then(res => {
     avatarEdit.style.backgroundImage = `url('${res.avatar}')`;
-    closePopup(avatarPopup);
+    avatarEditPopup.close();
   }) 
   .catch(err => handleError(err))
   .finally(res => {

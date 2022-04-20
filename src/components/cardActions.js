@@ -3,7 +3,6 @@ import { createCard, manageLikes, deleteCardFromDom, createImg } from "./Card";
 import { handleError, setInvisible, setVisible, setButtonBlockedState, resetButtonText } from "./common";
 import Api from './Api';
 // import Api, { createNewCard, deleteLike, putLike, deleteCard } from './Api';
-import { openPopup, closePopup } from './modal';
 import Card from './Card';
 const api = new Api(auth);
 
@@ -67,7 +66,7 @@ export function submitCardForm(evt, userId) {
     .then(([loadedImgElement, card]) => {
       const newCard = new Card(card, userId, '#card-template', loadedImgElement)
       cardsContainer.prepend(newCard.createCard());
-      closePopup(cardPopup);
+      cardPopup.close();
     })
     .catch(err => handleError(err))
     .finally(res => {
@@ -79,15 +78,16 @@ export function submitCardForm(evt, userId) {
 export function removeCard(cardId, card) {
   cardToDelete = card;
   cardIdToDelete = cardId;
-  deletePopup.removeEventListener('submit', deleteCardHandler);
-  openPopup(deletePopup);
-  deletePopup.addEventListener('submit', deleteCardHandler);
+  // deletePopup.removeEventListener('submit', deleteCardHandler);
+  deletePopup.open();
+  deletePopup.setEventListeners();
+  // deletePopup.addEventListener('submit', deleteCardHandler);
 }
 
 function deleteCardHandler() {
   api.deleteCard(cardIdToDelete)
     .then(deleteCardFromDom(cardToDelete))
-    .then(closePopup(deletePopup))
+    .then(deletePopup.close)
     .catch(err => handleError(err))
 }
 

@@ -1,7 +1,21 @@
 import './index.css';
-import {profilePopup, cardPopup, cardAddButton, profileOpenButton, avatarEdit, avatarPopup, avatarForm, errorObject, formList, formElements, loadingBar, main, deletePopup, cardsContainer} from './components/const';
+import {
+  profilePopup,
+  cardPopup,
+  cardAddButton,
+  profileOpenButton,
+  avatarEdit,
+  avatarPopup,
+  avatarForm,
+  formList,
+  formElements,
+  loadingBar,
+  main,
+  cardsContainer,
+  profileEditPopup, avatarEditPopup, cardEditPopup
+} from './components/const';
 // import {enableValidation} from './components/validate';
-import {openPopup, resetForm} from './components/modal';
+import {resetForm} from './components/modal';
 import {submitProfileForm, submitNewAvatar, setUserData, fillUserData} from './components/profile';
 // import {createCard} from './components/Card';
 // import { getCurrentUser, getCards } from './components/Api';
@@ -38,19 +52,22 @@ function initializeCardsList(cardList, userId) {
 profileOpenButton.addEventListener('click', () => {
   resetForm(profilePopup);
   setUserData();
-  openPopup(profilePopup);
+  profileEditPopup.open();
+  profileEditPopup.setEventListeners();
 });
 profilePopup.addEventListener('submit', submitProfileForm);
 cardAddButton.addEventListener('click', () => {
   resetForm(cardPopup);
-  openPopup(cardPopup);
+  cardEditPopup.open();
+  cardEditPopup.setEventListeners();
 });
 cardPopup.addEventListener('submit', (evt) => {
   submitCardForm(evt, currUser._id)
 });
 avatarEdit.addEventListener('click', () => {
   resetForm(avatarPopup);
-  openPopup(avatarPopup);
+  avatarEditPopup.open();
+  avatarEditPopup.setEventListeners();
 });
 avatarForm.addEventListener('submit', submitNewAvatar);
 
