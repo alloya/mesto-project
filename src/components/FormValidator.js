@@ -2,6 +2,7 @@ export default class FormValidator {
   constructor(settings, form) {
     this._settings = settings;
     this._form = form;
+    this._submit = this._form.querySelector(this._settings.submitButton);
   }
 
   _checkValidity = (settings, form, input) => {
@@ -28,6 +29,7 @@ export default class FormValidator {
     })
     form.addEventListener('submit', evt => {
       evt.preventDefault();
+      submit.classList.add(this._settings.buttonInactive);
     })
   }
 
@@ -46,7 +48,7 @@ export default class FormValidator {
   }
 
   enableValidation = () => {
-    this._submit = this._form.querySelector(this._settings.submitButton);
+
     this._setEventListeners(this._settings, this._form, this._submit)
     this._toggleButtonState(this._settings, this._form.checkValidity(), this._submit);
   }

@@ -78,15 +78,16 @@ avatarEdit.addEventListener('click', () => {
 });
 
 // avatarForm.addEventListener('submit', submitNewAvatar);
+// enableValidation(formList, formElements, errorObject);
 
 formList.forEach(form => {
   const formValidator = new FormValidator(formElements, form);
   formValidator.enableValidation();
 })
-// enableValidation(formList, formElements, errorObject);
 
 export const avatarEditPopup = new PopupWithForm(avatarPopup, data => {
   avatarEditPopup.loading(true);
+  // console.log(data);
   api.updateCurrentUserAvatar(data)
     .then(res => avatarEdit.style.backgroundImage = `url('${res.avatar}')`)
     .catch(err => handleError(err))

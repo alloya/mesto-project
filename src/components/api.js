@@ -53,7 +53,7 @@ export default class Api {
         'Content-type': 'application/json'
       },
       body: JSON.stringify({
-        avatar: avatarSrc
+        avatar: avatarSrc.avatarUrl
       })
     })
       .then(this._handleResponse);
