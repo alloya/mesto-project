@@ -90,5 +90,5 @@ export const avatarEditPopup = new PopupWithForm(avatarPopup, data => {
   api.updateCurrentUserAvatar(data)
     .then(res => avatarEdit.style.backgroundImage = `url('${res.avatar}')`)
     .catch(err => handleError(err))
-    .finally(avatarEditPopup.loading(false))
+    .finally(() => avatarEditPopup.loading(false))
 });
