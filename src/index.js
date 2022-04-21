@@ -12,7 +12,8 @@ import {
   loadingBar,
   main,
   cardsContainer,
-  profileEditPopup, avatarEditPopup, cardEditPopup
+  profileEditPopup,
+  cardEditPopup
 } from './components/const';
 // import {enableValidation} from './components/validate';
 import {resetForm} from './components/modal';
@@ -24,6 +25,8 @@ import { submitCardForm, removeCard } from './components/cardActions';
 import Card from './components/Card';
 import Api from './components/Api';
 import FormValidator from "./components/FormValidator";
+import Popup from "./components/Popup";
+import PopupWithForm from "./components/PopupWithForm";
 export let currUser = {};
 export const auth = { token: '100a0a32-f941-4db8-a158-a769d9d537de', apiUrl: 'https://nomoreparties.co/v1/plus-cohort-8' };
 const api = new Api(auth);
@@ -55,20 +58,25 @@ profileOpenButton.addEventListener('click', () => {
   profileEditPopup.open();
   profileEditPopup.setEventListeners();
 });
+
 profilePopup.addEventListener('submit', submitProfileForm);
+
 cardAddButton.addEventListener('click', () => {
   resetForm(cardPopup);
   cardEditPopup.open();
   cardEditPopup.setEventListeners();
 });
+
 cardPopup.addEventListener('submit', (evt) => {
   submitCardForm(evt, currUser._id)
 });
+
 avatarEdit.addEventListener('click', () => {
-  resetForm(avatarPopup);
+  // resetForm(avatarPopup);
   avatarEditPopup.open();
   avatarEditPopup.setEventListeners();
 });
+
 avatarForm.addEventListener('submit', submitNewAvatar);
 
 formList.forEach(form => {
@@ -76,3 +84,11 @@ formList.forEach(form => {
   formValidator.enableValidation();
 })
 // enableValidation(formList, formElements, errorObject);
+
+export const avatarEditPopup = new PopupWithForm(avatarPopup, data => {
+  avatarEditPopup.loading(true);
+  api.updateCurrentUserAvatar(data)
+    .then(res => avatarEdit.style.backgroundImage = `url('${res.avatar}')`)
+    .catch(err => handleError(err))
+    .finally(avatarEditPopup.loading(false))
+});

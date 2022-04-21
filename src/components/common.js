@@ -32,5 +32,5 @@ export function handleError(err) {
   console.log(err.message || err)
   errorText.textContent = err && err.message || err;
   errorPopup.open();
-  setTimeout(() => {closePopup(errorPopup)}, 2000);
+  setTimeout(() => {errorPopup.close()}, 2000);
 }

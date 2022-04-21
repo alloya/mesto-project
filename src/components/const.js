@@ -50,11 +50,11 @@ export const popupList = document.querySelectorAll('.popup');
 export const loadingBar = document.querySelector('.loading-bar');
 export const main = document.querySelector('.main');
 export const btnText = {save: 'Сохранить', saving: 'Сохраняю...', create: 'Создать'}
-export const deletePopup = new Popup(document.querySelector('.delete_popup'));
 export const errorText = document.querySelector('.error-text');
 
+export const deletePopup = new Popup(document.querySelector('.delete_popup'));
 export const errorPopup = new Popup(document.querySelector('.error-popup'));
 export const profileEditPopup = new Popup(profilePopup);
-export const avatarEditPopup = new Popup(avatarPopup);
+
 export const cardEditPopup = new Popup(cardPopup);
 export const popupWithFullImage = new PopupWithImage(fullImagePopup);

@@ -9,7 +9,7 @@ import {
   profileSaveButton,
   loadingBar,
   auth,
-  profileEditPopup, avatarEditPopup
+  profileEditPopup
 } from './const';
 import { toggleButtonState } from './validate';
 // import { closePopup } from './modal';
