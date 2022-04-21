@@ -77,7 +77,7 @@ avatarEdit.addEventListener('click', () => {
   avatarEditPopup.setEventListeners();
 });
 
-avatarForm.addEventListener('submit', submitNewAvatar);
+// avatarForm.addEventListener('submit', submitNewAvatar);
 
 formList.forEach(form => {
   const formValidator = new FormValidator(formElements, form);
