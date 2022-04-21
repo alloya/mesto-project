@@ -1,5 +1,6 @@
 import Popup from "./Popup";
-import {btnText, cardPopup} from "./const";
+import {btnText, cardPopup, formElements} from "./const";
+import FormValidator from "./FormValidator";
 
 export default class PopupWithForm extends Popup {
   constructor(popupSelector, submitCallback) {
@@ -7,10 +8,11 @@ export default class PopupWithForm extends Popup {
     this._submitCallback = submitCallback;
     this._form = this._popup.querySelector('.form');
     this._submit = this._popup.querySelector('.popup__button-save');
+    this._inputsList = this._form.querySelectorAll('.form__input');
+    this._validator = new FormValidator(formElements, this._form);
   }
 
   _getInputValues() {
-    this._inputsList = this._form.querySelectorAll('.form__input');
     this._inputsValues = {};
     this._inputsList.forEach(input => {
       this._inputsValues[input.name] = input.value;
@@ -31,7 +33,7 @@ export default class PopupWithForm extends Popup {
 
   close() {
     super.close();
-    this._form.reset();
+    this._resetForm();
   }
 
   loading(isLoading) {
@@ -42,5 +44,11 @@ export default class PopupWithForm extends Popup {
     } else {
       this._submit.textContent = btnText.save;
     }
+  }
+
+  _resetForm() {
+    this._form.reset();
+    this._inputsList.forEach(input => this._validator.hideError(formElements, this._form, input));
+    this._validator.toggleButtonState(formElements, false, this._submit);
   }
 }
