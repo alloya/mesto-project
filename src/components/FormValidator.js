@@ -5,51 +5,50 @@ export default class FormValidator {
     this._submit = this._form.querySelector(this._settings.submitButton);
   }
 
-  _checkValidity = (settings, form, input) => {
-    input.validity.valid ? this.hideError(settings, form, input) : this._showError(settings, form, input);
+  _checkValidity = (form, input) => {
+    input.validity.valid ? this.hideError(form, input) : this._showError(form, input);
   }
 
-  toggleButtonState(settings, isFormValid, submit) {
+  toggleButtonState(isFormValid) {
     if (isFormValid) {
-      submit.classList.remove(settings.buttonInactive);
-      submit.disabled = false;
+      this._submit.classList.remove(this._settings.buttonInactive);
+      this._submit.disabled = false;
     } else {
-      submit.classList.add(settings.buttonInactive);
-      submit.disabled = true;
+      this._submit.classList.add(this._settings.buttonInactive);
+      this._submit.disabled = true;
     }
   }
 
-  _setEventListeners(settings, form, submit) {
+  _setEventListeners() {
     this._inputsList = this._form.querySelectorAll(this._settings.input);
     this._inputsList.forEach((input) => {
       input.addEventListener('input', () => {
-        this._checkValidity(settings, form, input);
-        this.toggleButtonState(settings, form.checkValidity(), submit);
+        this._checkValidity(this._form, input);
+        this.toggleButtonState(this._form.checkValidity(), this._submit);
       })
     })
-    form.addEventListener('submit', evt => {
+    this._form.addEventListener('submit', evt => {
       evt.preventDefault();
-      submit.classList.add(this._settings.buttonInactive);
+      this._submit.classList.add(this._settings.buttonInactive);
     })
   }
 
-  _showError(settings, form, input) {
+  _showError(form, input) {
     const errorSpan = form.querySelector(`.${input.id}-error`);
     errorSpan.textContent = input.validationMessage;
-    errorSpan.classList.add(settings.spanErrorClass);
-    input.classList.add(settings.inputErrorClass);
+    errorSpan.classList.add(this._settings.spanErrorClass);
+    input.classList.add(this._settings.inputErrorClass);
   }
 
-  hideError(settings, form, input) {
+  hideError(form, input) {
     const errorSpan = form.querySelector(`.${input.id}-error`);
     errorSpan.textContent = '';
-    errorSpan.classList.remove(settings.spanErrorClass);
-    input.classList.remove(settings.inputErrorClass)
+    errorSpan.classList.remove(this._settings.spanErrorClass);
+    input.classList.remove(this._settings.inputErrorClass)
   }
 
   enableValidation = () => {
-
-    this._setEventListeners(this._settings, this._form, this._submit)
-    this.toggleButtonState(this._settings, this._form.checkValidity(), this._submit);
+    this._setEventListeners();
+    this.toggleButtonState(this._form.checkValidity());
   }
 }

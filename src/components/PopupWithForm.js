@@ -48,7 +48,7 @@ export default class PopupWithForm extends Popup {
 
   _resetForm() {
     this._form.reset();
-    this._inputsList.forEach(input => this._validator.hideError(formElements, this._form, input));
-    this._validator.toggleButtonState(formElements, false, this._submit);
+    this._inputsList.forEach(input => this._validator.hideError(this._form, input));
+    this._validator.toggleButtonState(false);
   }
 }
