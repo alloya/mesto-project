@@ -1,5 +1,6 @@
 import './index.css';
 import {
+  auth,
   profilePopup,
   cardPopup,
   cardAddButton,
@@ -13,35 +14,40 @@ import {
   main,
   cardsContainer,
   profileEditPopup,
-  cardEditPopup
+  cardEditPopup, profile
 } from './components/const';
 // import {enableValidation} from './components/validate';
 import {resetForm} from './components/modal';
 import {submitProfileForm, submitNewAvatar, setUserData, fillUserData} from './components/profile';
 // import {createCard} from './components/Card';
 // import { getCurrentUser, getCards } from './components/Api';
-import { setInvisible, setVisible, handleError } from './components/common';
-import { submitCardForm, removeCard } from './components/cardActions';
+import {setInvisible, setVisible, handleError} from './components/common';
+import {submitCardForm, removeCard} from './components/cardActions';
 import Card from './components/Card';
 import Api from './components/Api';
 import FormValidator from "./components/FormValidator";
 import Popup from "./components/Popup";
 import PopupWithForm from "./components/PopupWithForm";
-export let currUser = {};
-export const auth = { token: '100a0a32-f941-4db8-a158-a769d9d537de', apiUrl: 'https://nomoreparties.co/v1/plus-cohort-8' };
+import UserInfo from "./components/UserInfo";
+const user = {};
+export const currUser = {};
 const api = new Api(auth);
+const userInfo = new UserInfo(profile);
 
-const userPromise = api.getCurrentUser();
+api.getCurrentUser()
+  .then(res => {
+    user.id = res._id;
+    userInfo.setUserInfo(res)
+  })
+  .catch(err => console.log('Error: ' + err));
 
-const cardsPromise = userPromise.then(res => api.getCards());
-
-Promise.all([userPromise, cardsPromise]).then(([user, cards]) => { 
-  currUser = user;
-  fillUserData(user);
-  initializeCardsList(cards, user._id);
-  setInvisible(loadingBar);
-  setVisible(main);
-});
+api.getCards()
+  .then(res => initializeCardsList(res, user.id))
+  .then(() => {
+    setInvisible(loadingBar);
+    setVisible(main);
+  })
+  .catch(err => console.log('Error: ' + err))
 
 function initializeCardsList(cardList, userId) {
   if (cardList.length) {
@@ -72,7 +78,6 @@ cardPopup.addEventListener('submit', (evt) => {
 });
 
 avatarEdit.addEventListener('click', () => {
-  // resetForm(avatarPopup);
   avatarEditPopup.open();
   avatarEditPopup.setEventListeners();
 });
@@ -87,7 +92,6 @@ formList.forEach(form => {
 
 export const avatarEditPopup = new PopupWithForm(avatarPopup, data => {
   avatarEditPopup.loading(true);
-  // console.log(data);
   api.updateCurrentUserAvatar(data)
     .then(res => avatarEdit.style.backgroundImage = `url('${res.avatar}')`)
     .catch(err => handleError(err))

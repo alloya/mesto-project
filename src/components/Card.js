@@ -62,7 +62,7 @@ export default class Card {
   }
 
   _manageLikes(likeElement, card) {
-    card.likes.some((like => like._id == this._userId))
+    card.likes.some((like => like._id === this._userId))
       ? likeElement.classList.add('card__like_inverted')
       : likeElement.classList.remove('card__like_inverted');
       this._likeCounter.textContent = card.likes && card.likes.length || 0;
@@ -93,7 +93,7 @@ export default class Card {
   }
 
   _manageBins() {
-    if (this._card.owner._id != this._userId) {
+    if (this._card.owner._id !== this._userId) {
       this._cardDelete.remove();
       return;
     }
