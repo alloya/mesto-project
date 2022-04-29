@@ -60,7 +60,7 @@ function handleCardClick(title, link) {
 }
 
 function createCard(data) {
-  const card = new Card(data,userInfo.id, '#card-template', handleCardClick );
+  const card = new Card(data, userInfo.id, '#card-template', handleCardClick);
   cardsContainer.append(card.createCard());
 }
 
