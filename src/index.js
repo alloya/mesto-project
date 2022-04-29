@@ -42,7 +42,7 @@ Promise.all([api.getCurrentUser(), api.getCards()])
     profileName.textContent = userData.name;
     profileDescription.textContent = userData.about;
     avatarEdit.style.backgroundImage = `url("${userData.avatar}")`;
-    cardList.render(cardsData);
+    cardList.render(cardsList);
     //initializeCardsList(cardsData, userInfo.id);
   })
   .then(() => {
