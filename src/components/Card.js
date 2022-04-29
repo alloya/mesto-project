@@ -1,9 +1,8 @@
-import {deletePopup} from './const';
 import {handleError} from "./common";
 import {api} from "../index";
 
 export default class Card {
-  constructor(card, currentUserId, selector, handleCardClick) {
+  constructor(card, currentUserId, selector, handleCardClick, handleDelete) {
     this._userId = currentUserId;
     this._selector = selector;
     this._title = card.name;
@@ -12,6 +11,7 @@ export default class Card {
     this._likeCounter = card.likes.length;
     // this._cardLike;
     this._handleCardClick = handleCardClick;
+    this._handleDelete = handleDelete;
   }
 
   getCardId() {
@@ -43,15 +43,19 @@ export default class Card {
     )
   }
 
-  _deleteCard(id, element) {
-    // deletePopup.open();
-    // deletePopup.setEventListeners();
-    api.deleteCard(this.getCardId())
-      .then(() => {
-        element.remove();
-      })
-      .catch(error => console.error(error))
-      // .finally(deletePopup.close())
+  // _deleteCard(id, element) {
+  //   // deletePopup.open();
+  //   // deletePopup.setEventListeners();
+  //   api.deleteCard(this.getCardId())
+  //     .then(() => {
+  //       element.remove();
+  //     })
+  //     .catch(error => console.error(error))
+  //     // .finally(deletePopup.close())
+  // }
+
+  deleteCard(){
+    this._cardElement.remove();
   }
 
   _setEventListeners() {
@@ -101,6 +105,6 @@ export default class Card {
       this._cardDelete.remove();
       return;
     }
-    this._cardDelete.addEventListener('click', () => this._deleteCard(this._card._id, this._cardElement));
+    this._cardDelete.addEventListener('click', () => this._handleDelete(this));
   }
 }

@@ -1,5 +1,6 @@
 import Popup from "./Popup";
 import PopupWithImage from "./PopupWithImage";
+import PopupWithDelete from "./PopupWithDelete";
 
 export const auth = {
   token: '100a0a32-f941-4db8-a158-a769d9d537de',
@@ -36,7 +37,7 @@ export const profile = {
   about: profileDescription,
   avatar: avatarEdit
 }
-export const deletePopup = new Popup(document.querySelector('.delete_popup'));
+export const deletePopupSelector = document.querySelector('.delete_popup');
 export const errorPopup = new Popup(document.querySelector('.error-popup'));
 export const popupWithFullImage = new PopupWithImage(fullImagePopup);
 

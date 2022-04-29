@@ -13,7 +13,7 @@ import {
   main,
   cardsContainer,
   profile,
-  profileNameInput, profileDescriptionInput, profileName, profileDescription, popupWithFullImage
+  profileNameInput, profileDescriptionInput, profileName, profileDescription, popupWithFullImage, deletePopupSelector
 } from './components/const';
 import {setInvisible, setVisible, handleError} from './components/common';
 import Card from './components/Card';
@@ -21,6 +21,7 @@ import Api from './components/Api';
 import FormValidator from "./components/FormValidator";
 import PopupWithForm from "./components/PopupWithForm";
 import UserInfo from "./components/UserInfo";
+import PopupWithDelete from "./components/PopupWithDelete";
 
 export const api = new Api(auth);
 const userInfo = new UserInfo(profile);
@@ -59,8 +60,8 @@ function handleCardClick(title, link) {
 }
 
 function createCard(data) {
-  const card = new Card(data, userInfo.id, '#card-template', handleCardClick);
-  cardsContainer.append(card.createCard());
+  const card = new Card(data, userInfo.id, '#card-template', handleCardClick, deleteCard);
+  cardsContainer.prepend(card.createCard());
 }
 
 const cardEditPopup = new PopupWithForm(cardPopup, data => {
@@ -92,6 +93,15 @@ const avatarEditPopup = new PopupWithForm(avatarPopup, data => {
     .catch(err => handleError(err))
     .finally(() => avatarEditPopup.loading(false))
 });
+
+export const deletePopup = new PopupWithDelete(deletePopupSelector, (card)=> {
+  deleteCard(card)
+});
+
+function deleteCard(card){
+  deletePopup.open(card);
+
+}
 
 profileOpenButton.addEventListener('click', () => {
   const profile = userInfo.getUserInfo();
