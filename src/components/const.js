@@ -62,5 +62,5 @@ export const profile = {
 export const deletePopup = new Popup(document.querySelector('.delete_popup'));
 export const errorPopup = new Popup(document.querySelector('.error-popup'));
 
-export const cardEditPopup = new Popup(cardPopup);
+
 export const popupWithFullImage = new PopupWithImage(fullImagePopup);

@@ -12,33 +12,29 @@ import {
   loadingBar,
   main,
   cardsContainer,
-  cardEditPopup,
   profile,
-  profileNameInput, profileDescriptionInput, profileName, profileDescription
+  profileNameInput, profileDescriptionInput, profileName, profileDescription, popupWithFullImage
 } from './components/const';
 import {resetForm} from './components/modal';
-import {submitProfileForm, submitNewAvatar, setUserData, fillUserData} from './components/profile';
 import {setInvisible, setVisible, handleError} from './components/common';
-import {submitCardForm, removeCard} from './components/cardActions';
 import Card from './components/Card';
 import Api from './components/Api';
 import FormValidator from "./components/FormValidator";
 import PopupWithForm from "./components/PopupWithForm";
 import UserInfo from "./components/UserInfo";
-// let user = {};
-export const currUser = {};
+
 export const api = new Api(auth);
 const userInfo = new UserInfo(profile);
 
 Promise.all([api.getCurrentUser(), api.getCards()])
-  .then(([userData, cardsData]) => {
+  .then(([userData, cardsList]) => {
     userInfo.name = userData.name;
     userInfo.about = userData.about;
     userInfo.id = userData._id;
     profileName.textContent = userData.name;
     profileDescription.textContent = userData.about;
     avatarEdit.style.backgroundImage = `url("${userData.avatar}")`
-    initializeCardsList(cardsData, userInfo.id);
+    initializeCardsList(cardsList, userInfo.id);
   })
   .then(() => {
     setInvisible(loadingBar);
@@ -46,17 +42,39 @@ Promise.all([api.getCurrentUser(), api.getCards()])
   })
   .catch(err => console.log('Error: ' + err))
 
-
-function initializeCardsList(cardList, userId) {
-  if (cardList.length) {
-    cardList.forEach(el => {
-      const card = new Card(el, userId, '#card-template', null)
-      cardsContainer.append(card.createCard())
+function initializeCardsList(cardsList, userId) {
+  if (cardsList.length) {
+    cardsList.forEach(el => {
+      createCard(el);
     });
   }
 }
 
-export const profileEditPopup = new PopupWithForm(profilePopup, () => {
+function handleCardClick(title, link) {
+  const card = {
+    url: link,
+    name: title
+  }
+  popupWithFullImage.open(card);
+  popupWithFullImage.setEventListeners();
+}
+
+function createCard(data) {
+  const card = new Card(data, userInfo.id, '#card-template', handleCardClick);
+  cardsContainer.append(card.createCard());
+}
+
+const cardEditPopup = new PopupWithForm(cardPopup, data => {
+  cardEditPopup.loading(true);
+  api.createNewCard(data)
+    .then(res => {
+      return createCard(res)
+    })
+    .catch(err => console.log(err))
+    .finally(cardEditPopup.loading(false));
+});
+
+const profileEditPopup = new PopupWithForm(profilePopup, () => {
   profileEditPopup.loading(true);
   const profileData = {
     name: profileNameInput.value,
@@ -76,16 +94,10 @@ profileOpenButton.addEventListener('click', () => {
   profileEditPopup.setEventListeners();
 });
 
-profilePopup.addEventListener('submit', submitProfileForm);
-
 cardAddButton.addEventListener('click', () => {
   resetForm(cardPopup);
   cardEditPopup.open();
   cardEditPopup.setEventListeners();
-});
-
-cardPopup.addEventListener('submit', (evt) => {
-  submitCardForm(evt, currUser._id)
 });
 
 avatarEdit.addEventListener('click', () => {

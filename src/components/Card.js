@@ -1,20 +1,17 @@
-import {fullImagePopup, cardTemplate, fullImage, fullImageSubtitle, auth, popupWithFullImage} from './const';
-// import { openPopup } from './modal';
-import { handleLikeClick, removeCard } from './cardActions';
-import Api from './Api';
-const api = new Api(auth);
+import {deletePopup} from './const';
+import {handleError} from "./common";
+import {api} from "../index";
 
 export default class Card {
-  constructor(card, currentUserId, selector, loadedImgElement) {
+  constructor(card, currentUserId, selector, handleCardClick) {
     this._userId = currentUserId;
     this._selector = selector;
-    this._imgElement = loadedImgElement;
+    this._title = card.name;
     this._card = card;
     this._link = card.link;
-    this._likeCounter;
+    this._likeCounter = card.likes.length;
     this._cardLike;
-    this._cardTitle;
-
+    this._handleCardClick = handleCardClick;
   }
 
   getCardId() {
@@ -22,8 +19,7 @@ export default class Card {
   }
 
   _getTemplate() {
-    const card = document.querySelector(this._selector).content.querySelector('.card').cloneNode(true);
-    return card;
+    return document.querySelector(this._selector).content.querySelector('.card').cloneNode(true);
   }
 
   createCard() {
@@ -31,18 +27,20 @@ export default class Card {
     this._cardDelete = this._cardElement.querySelector('.card__delete');
     this._cardLike = this._cardElement.querySelector('.card__like');
     this._likeCounter = this._cardElement.querySelector('.card__like-counter');
-    this._cardElement.querySelector('.card__title').textContent = this._card.name;
+    this._cardElement.querySelector('.card__title').textContent = this._title;
     this._cardImg = this._createImg(this._link);
     this._cardElement.prepend(this._cardImg);
     this._manageLikes(this._cardLike, this._card);
     this._manageBins(this._card);
     this._setEventListeners();
-
     return this._cardElement;
   }
 
   isLiked() {
-
+    this._card.likes.forEach(item => {
+        item._id === this._userId ? true : false
+      }
+    )
   }
 
   deleteCardFromDom() {
@@ -51,7 +49,7 @@ export default class Card {
 
   _setEventListeners() {
     this._cardLike.addEventListener('click', (evt) => this._handleLikeClick(evt, this.getCardId()));
-    this._cardImg.addEventListener('click', () => this._showFullImage());
+    this._cardImg.addEventListener('click', () => this._handleCardClick(this._title, this._link));
   }
 
   _createImg(imageSrc) {
@@ -65,7 +63,7 @@ export default class Card {
     card.likes.some((like => like._id === this._userId))
       ? likeElement.classList.add('card__like_inverted')
       : likeElement.classList.remove('card__like_inverted');
-      this._likeCounter.textContent = card.likes && card.likes.length || 0;
+    this._likeCounter.textContent = card.likes && card.likes.length || 0;
   }
 
   _handleLikeClick(evt, cardId) {
@@ -79,8 +77,7 @@ export default class Card {
         .finally(() => {
           evt.target.removeAttribute('disabled', '');
         });
-    }
-    else {
+    } else {
       api.putLike(cardId)
         .then(cardResponse => {
           this._manageLikes(evt.target, cardResponse)
@@ -97,80 +94,17 @@ export default class Card {
       this._cardDelete.remove();
       return;
     }
-    this._cardDelete.addEventListener('click', () => removeCard(this._card._id, this._cardElement));
+    this._cardDelete.addEventListener('click', () => this._removeCard(this._card._id, this._cardElement));
   }
 
-  _showFullImage() {
-    const card = {
-      url: this._link,
-      name: this._card.name
-    }
-    popupWithFullImage.open(card);
-    popupWithFullImage.setEventListeners();
+  _removeCard() {
+    deletePopup.open();
+    deletePopup.setEventListeners();
   }
 
-
 }
 
-// export function createCard(card, userId, loadedImgElement) {
-//   const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
-//   const cardDelete = cardElement.querySelector('.card__delete');
-//   const cardLike = cardElement.querySelector('.card__like');
-//   const likeCounter = cardElement.querySelector('.card__like-counter');
-//   const cardImg = loadedImgElement || createImg(card.link);
-//   cardImg.addEventListener('click', () => showFullImage(cardElement.querySelector('.card__picture')));
-//   cardImg.setAttribute('alt', card.name);
-
-//   cardElement.prepend(cardImg);
-//   cardElement.querySelector('.card__title').textContent = card.name;
-
-//   manageLikes(cardLike, likeCounter, card, userId);
-//   manageBins(card, cardDelete, userId, cardElement);
-//   cardLike.addEventListener('click', (evt) => {
-//     handleLikeClick(evt, card._id, userId)
-//   }, false);
-//   return cardElement;
+// export function deleteCardFromDom(card) {
+//   card.remove();
+//   card = null;
 // }
-
-export function createImg(imageSrc) {
-  const image = document.createElement('img');
-  image.src = imageSrc;
-  image.classList.add('card__picture');
-  return image;
-}
-
-// export function manageLikes(likeElement, likeCounter, card, userId) {
-//   card.likes.some((like => like._id == userId))
-//     ? likeElement.classList.add('card__like_inverted')
-//     : likeElement.classList.remove('card__like_inverted');
-
-//   // if (card.likes.some((like => like._id == userId))) {
-//   //   likeElement.classList.add('card__like_inverted');
-//   //   likeElement.setAttribute('like', true);
-//   // }
-//   // else {
-//   //   likeElement.classList.remove('card__like_inverted');
-//   //   likeElement.setAttribute('like', false);
-//   // }
-//   likeCounter.textContent = card.likes && card.likes.length || 0;
-// }
-
-// function manageBins(card, binElement, userId, cardElement) {
-//   if (card.owner._id != userId) {
-//     binElement.remove();
-//     return;
-//   }
-//   binElement.addEventListener('click', () => removeCard(card._id, cardElement));
-// }
-
-// function showFullImage(card) {
-//   fullImage.setAttribute('src', card.src);
-//   fullImage.setAttribute('alt', card.alt);
-//   fullImageSubtitle.textContent = card.alt;
-//   openPopup(fullImagePopup);
-// }
-
-export function deleteCardFromDom(card) {
-  card.remove();
-  card = null;
-}

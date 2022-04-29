@@ -78,7 +78,7 @@ export default class Api {
       .then(this._handleResponse);
   }
 
-  createNewCard(cardName, cardLink) {
+  createNewCard({cardName, cardLink}) {
     return fetch(`${this._url}/cards`, {
       method: "POST",
       headers: {
