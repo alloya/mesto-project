@@ -102,7 +102,6 @@ profileOpenButton.addEventListener('click', () => {
 });
 
 cardAddButton.addEventListener('click', () => {
-  cardEditPopup.reset();
   cardEditPopup.open();
   cardEditPopup.setEventListeners();
 });

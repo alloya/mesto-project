@@ -29,12 +29,7 @@ export default class Popup {
 
   setEventListeners() {
     const closePopupButton = this._popup.querySelector('.popup__close');
-    closePopupButton.addEventListener('click',() => this.close());
+    closePopupButton.addEventListener('click', () => this.close());
     this._popup.addEventListener('click', this._handlePopupOverlayClick)
-  }
-
-  reset(){
-    const form = this._popup.querySelector(formElementClass);
-    form.reset();
   }
 }

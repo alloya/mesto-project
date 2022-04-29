@@ -10,7 +10,7 @@ export default class Card {
     this._card = card;
     this._link = card.link;
     this._likeCounter = card.likes.length;
-    this._cardLike;
+    // this._cardLike;
     this._handleCardClick = handleCardClick;
   }
 
