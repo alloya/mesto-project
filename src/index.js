@@ -22,9 +22,18 @@ import FormValidator from "./components/FormValidator";
 import PopupWithForm from "./components/PopupWithForm";
 import UserInfo from "./components/UserInfo";
 import PopupWithDelete from "./components/PopupWithDelete";
+import Section from './components/Section';
+
 
 export const api = new Api(auth);
 const userInfo = new UserInfo(profile);
+
+const cardList = new Section({
+  renderer: (item) => {
+    const card = new Card(item, userInfo.id, '#card-template', handleCardClick);
+    cardList.addItem(card.createCard());
+  }
+}, cardsContainer)
 
 Promise.all([api.getCurrentUser(), api.getCards()])
   .then(([userData, cardsList]) => {
@@ -33,8 +42,9 @@ Promise.all([api.getCurrentUser(), api.getCards()])
     userInfo.id = userData._id;
     profileName.textContent = userData.name;
     profileDescription.textContent = userData.about;
-    avatarEdit.style.backgroundImage = `url("${userData.avatar}")`
-    initializeCardsList(cardsList, userInfo.id);
+    avatarEdit.style.backgroundImage = `url("${userData.avatar}")`;
+    cardList.render(cardsList.reverse());
+    //initializeCardsList(cardsData, userInfo.id);
   })
   .then(() => {
     setInvisible(loadingBar);
@@ -42,13 +52,16 @@ Promise.all([api.getCurrentUser(), api.getCards()])
   })
   .catch(err => console.log('Error: ' + err))
 
-function initializeCardsList(cardsList, userId) {
-  if (cardsList.length) {
-    cardsList.forEach(el => {
-      createCard(el);
-    });
-  }
-}
+
+
+// function initializeCardsList(cardList, userId) {
+//   if (cardList.length) {
+//     cardList.forEach(el => {
+//       const card = new Card(el, userId, '#card-template', null)
+//       cardsContainer.append(card.createCard())
+//     });
+//   }
+// }
 
 function handleCardClick(title, link) {
   const card = {
@@ -100,7 +113,6 @@ export const deletePopup = new PopupWithDelete(deletePopupSelector, (card)=> {
 
 function deleteCard(card){
   deletePopup.open(card);
-
 }
 
 profileOpenButton.addEventListener('click', () => {

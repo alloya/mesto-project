@@ -43,6 +43,7 @@ export default class Card {
     )
   }
 
+
   // _deleteCard(id, element) {
   //   // deletePopup.open();
   //   // deletePopup.setEventListeners();
@@ -56,6 +57,7 @@ export default class Card {
 
   deleteCard(){
     this._cardElement.remove();
+
   }
 
   _setEventListeners() {
@@ -105,6 +107,7 @@ export default class Card {
       this._cardDelete.remove();
       return;
     }
+
     this._cardDelete.addEventListener('click', () => this._handleDelete(this));
   }
 }
