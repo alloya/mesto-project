@@ -43,8 +43,15 @@ export default class Card {
     )
   }
 
-  deleteCardFromDom() {
-
+  _deleteCard(id, element) {
+    // deletePopup.open();
+    // deletePopup.setEventListeners();
+    api.deleteCard(this.getCardId())
+      .then(() => {
+        element.remove();
+      })
+      .catch(error => console.error(error))
+      // .finally(deletePopup.close())
   }
 
   _setEventListeners() {
@@ -94,17 +101,6 @@ export default class Card {
       this._cardDelete.remove();
       return;
     }
-    this._cardDelete.addEventListener('click', () => this._removeCard(this._card._id, this._cardElement));
+    this._cardDelete.addEventListener('click', () => this._deleteCard(this._card._id, this._cardElement));
   }
-
-  _removeCard() {
-    deletePopup.open();
-    deletePopup.setEventListeners();
-  }
-
 }
-
-// export function deleteCardFromDom(card) {
-//   card.remove();
-//   card = null;
-// }
