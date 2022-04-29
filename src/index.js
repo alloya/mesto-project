@@ -1,47 +1,51 @@
 import './index.css';
 import {
+  auth,
   profilePopup,
   cardPopup,
   cardAddButton,
   profileOpenButton,
   avatarEdit,
   avatarPopup,
-  avatarForm,
   formList,
   formElements,
   loadingBar,
   main,
   cardsContainer,
-  profileEditPopup,
-  cardEditPopup
+  cardEditPopup,
+  profile,
+  profileNameInput, profileDescriptionInput, profileName, profileDescription
 } from './components/const';
-// import {enableValidation} from './components/validate';
 import {resetForm} from './components/modal';
 import {submitProfileForm, submitNewAvatar, setUserData, fillUserData} from './components/profile';
-// import {createCard} from './components/Card';
-// import { getCurrentUser, getCards } from './components/Api';
-import { setInvisible, setVisible, handleError } from './components/common';
-import { submitCardForm, removeCard } from './components/cardActions';
+import {setInvisible, setVisible, handleError} from './components/common';
+import {submitCardForm, removeCard} from './components/cardActions';
 import Card from './components/Card';
 import Api from './components/Api';
 import FormValidator from "./components/FormValidator";
-import Popup from "./components/Popup";
 import PopupWithForm from "./components/PopupWithForm";
-export let currUser = {};
-export const auth = { token: '100a0a32-f941-4db8-a158-a769d9d537de', apiUrl: 'https://nomoreparties.co/v1/plus-cohort-8' };
-const api = new Api(auth);
+import UserInfo from "./components/UserInfo";
+// let user = {};
+export const currUser = {};
+export const api = new Api(auth);
+const userInfo = new UserInfo(profile);
 
-const userPromise = api.getCurrentUser();
+Promise.all([api.getCurrentUser(), api.getCards()])
+  .then(([userData, cardsData]) => {
+    userInfo.name = userData.name;
+    userInfo.about = userData.about;
+    userInfo.id = userData._id;
+    profileName.textContent = userData.name;
+    profileDescription.textContent = userData.about;
+    avatarEdit.style.backgroundImage = `url("${userData.avatar}")`
+    initializeCardsList(cardsData, userInfo.id);
+  })
+  .then(() => {
+    setInvisible(loadingBar);
+    setVisible(main);
+  })
+  .catch(err => console.log('Error: ' + err))
 
-const cardsPromise = userPromise.then(res => api.getCards());
-
-Promise.all([userPromise, cardsPromise]).then(([user, cards]) => { 
-  currUser = user;
-  fillUserData(user);
-  initializeCardsList(cards, user._id);
-  setInvisible(loadingBar);
-  setVisible(main);
-});
 
 function initializeCardsList(cardList, userId) {
   if (cardList.length) {
@@ -52,9 +56,22 @@ function initializeCardsList(cardList, userId) {
   }
 }
 
+export const profileEditPopup = new PopupWithForm(profilePopup, () => {
+  profileEditPopup.loading(true);
+  const profileData = {
+    name: profileNameInput.value,
+    about: profileDescriptionInput.value
+  }
+  userInfo.setUserInfo(profileData)
+    .then(() => {
+      profileEditPopup.loading(false)
+    });
+});
+
 profileOpenButton.addEventListener('click', () => {
-  resetForm(profilePopup);
-  setUserData();
+  const profile = userInfo.getUserInfo();
+  profileNameInput.value = profile.name;
+  profileDescriptionInput.value = profile.about;
   profileEditPopup.open();
   profileEditPopup.setEventListeners();
 });
@@ -72,13 +89,9 @@ cardPopup.addEventListener('submit', (evt) => {
 });
 
 avatarEdit.addEventListener('click', () => {
-  // resetForm(avatarPopup);
   avatarEditPopup.open();
   avatarEditPopup.setEventListeners();
 });
-
-// avatarForm.addEventListener('submit', submitNewAvatar);
-// enableValidation(formList, formElements, errorObject);
 
 formList.forEach(form => {
   const formValidator = new FormValidator(formElements, form);
@@ -87,7 +100,6 @@ formList.forEach(form => {
 
 export const avatarEditPopup = new PopupWithForm(avatarPopup, data => {
   avatarEditPopup.loading(true);
-  // console.log(data);
   api.updateCurrentUserAvatar(data)
     .then(res => avatarEdit.style.backgroundImage = `url('${res.avatar}')`)
     .catch(err => handleError(err))

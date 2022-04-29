@@ -23,6 +23,7 @@ export const profileOpenButton = document.querySelector(".profile__edit-button")
 export const profileSaveButton = profilePopup.querySelector(".popup__button-save");
 export const profileName = document.querySelector(".profile__name");
 export const profileDescription = document.querySelector(".profile__subtitle");
+
 export const profileNameInput = document.querySelector(".profile__input-name");
 export const profileDescriptionInput = document.querySelector(".profile__input-description");
 
@@ -52,9 +53,14 @@ export const main = document.querySelector('.main');
 export const btnText = {save: 'Сохранить', saving: 'Сохраняю...', create: 'Создать'}
 export const errorText = document.querySelector('.error-text');
 
+export const profile = {
+  name: profileName,
+  about: profileDescription,
+  avatar: avatarEdit
+}
+
 export const deletePopup = new Popup(document.querySelector('.delete_popup'));
 export const errorPopup = new Popup(document.querySelector('.error-popup'));
-export const profileEditPopup = new Popup(profilePopup);
 
 export const cardEditPopup = new Popup(cardPopup);
 export const popupWithFullImage = new PopupWithImage(fullImagePopup);
