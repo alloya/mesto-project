@@ -21,9 +21,8 @@
   "homepage": "https://alloya.github.io/mesto-project",
   "devDependencies": {
     "@babel/core": "^7.17.8",
-    "@babel/plugin-transform-runtime": "^7.17.0",
-    "@babel/preset-env": "^7.16.11",
     "@babel/polyfill": "^7.12.1",
+    "@babel/preset-env": "^7.16.11",
     "autoprefixer": "^10.4.4",
     "babel-core": "^6.26.3",
     "babel-loader": "^8.2.5",
