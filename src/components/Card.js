@@ -1,8 +1,6 @@
-import {auth, deletePopup} from './const';
-import Api from './Api';
+import {deletePopup} from './const';
 import {handleError} from "./common";
-
-const api = new Api(auth);
+import {api} from "../index";
 
 export default class Card {
   constructor(card, currentUserId, selector, handleCardClick) {
@@ -14,7 +12,6 @@ export default class Card {
     this._likeCounter = card.likes.length;
     this._cardLike;
     this._handleCardClick = handleCardClick;
-
   }
 
   getCardId() {
@@ -106,15 +103,8 @@ export default class Card {
   }
 
 }
-//
-// export function createImg(imageSrc) {
-//   const image = document.createElement('img');
-//   image.src = imageSrc;
-//   image.classList.add('card__picture');
-//   return image;
-// }
 
-export function deleteCardFromDom(card) {
-  card.remove();
-  card = null;
-}
+// export function deleteCardFromDom(card) {
+//   card.remove();
+//   card = null;
+// }
