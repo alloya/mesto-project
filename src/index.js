@@ -22,14 +22,13 @@ import FormValidator from "./components/FormValidator";
 import PopupWithForm from "./components/PopupWithForm";
 import UserInfo from "./components/UserInfo";
 import Section from './components/Section';
-// let user = {};
-export const currUser = {};
+
 export const api = new Api(auth);
 const userInfo = new UserInfo(profile);
 
 const cardList = new Section({
   renderer: (item) => {
-    const card = new Card(item, userInfo.id, '#card-template', null);
+    const card = new Card(item, userInfo.id, '#card-template', handleCardClick);
     cardList.addItem(card.createCard());
   }
 }, cardsContainer)
@@ -42,7 +41,7 @@ Promise.all([api.getCurrentUser(), api.getCards()])
     profileName.textContent = userData.name;
     profileDescription.textContent = userData.about;
     avatarEdit.style.backgroundImage = `url("${userData.avatar}")`;
-    cardList.render(cardsList);
+    cardList.render(cardsList.reverse());
     //initializeCardsList(cardsData, userInfo.id);
   })
   .then(() => {
