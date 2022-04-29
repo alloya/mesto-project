@@ -13,10 +13,10 @@ export function setButtonBlockedState(btn) {
   btn.textContent = btnText.saving;
 }
 
-export function resetButtonText(btn, text) {
-  btn.textContent = text;
-  enableButton(btn);
-}
+// export function resetButtonText(btn, text) {
+//   btn.textContent = text;
+//   enableButton(btn);
+// }
 
 export function disableButton(btn) {
   btn.classList.add(formElements.buttonInactive);

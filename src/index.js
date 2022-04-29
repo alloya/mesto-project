@@ -15,7 +15,6 @@ import {
   profile,
   profileNameInput, profileDescriptionInput, profileName, profileDescription, popupWithFullImage
 } from './components/const';
-import {resetForm} from './components/modal';
 import {setInvisible, setVisible, handleError} from './components/common';
 import Card from './components/Card';
 import Api from './components/Api';
@@ -86,6 +85,14 @@ const profileEditPopup = new PopupWithForm(profilePopup, () => {
     });
 });
 
+const avatarEditPopup = new PopupWithForm(avatarPopup, data => {
+  avatarEditPopup.loading(true);
+  api.updateCurrentUserAvatar(data)
+    .then(res => avatarEdit.style.backgroundImage = `url('${res.avatar}')`)
+    .catch(err => handleError(err))
+    .finally(() => avatarEditPopup.loading(false))
+});
+
 profileOpenButton.addEventListener('click', () => {
   const profile = userInfo.getUserInfo();
   profileNameInput.value = profile.name;
@@ -95,7 +102,6 @@ profileOpenButton.addEventListener('click', () => {
 });
 
 cardAddButton.addEventListener('click', () => {
-  resetForm(cardPopup);
   cardEditPopup.open();
   cardEditPopup.setEventListeners();
 });
@@ -110,10 +116,4 @@ formList.forEach(form => {
   formValidator.enableValidation();
 })
 
-export const avatarEditPopup = new PopupWithForm(avatarPopup, data => {
-  avatarEditPopup.loading(true);
-  api.updateCurrentUserAvatar(data)
-    .then(res => avatarEdit.style.backgroundImage = `url('${res.avatar}')`)
-    .catch(err => handleError(err))
-    .finally(() => avatarEditPopup.loading(false))
-});
+
