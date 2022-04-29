@@ -1,21 +1,25 @@
-// import Api from "./Api"
+import {api} from "../index";
+
 export default class UserInfo {
   constructor(profile) {
     this._userName = profile.name;
     this._userAbout = profile.about;
     this._avatar = profile.avatar;
+    this.name = '';
+    this.about = '';
+    this.id = '';
   }
 
   getUserInfo() {
-    this._userData = {};
-    this._userData.name = this._userName.textContent;
-    this._userData.about = this._userAbout.textContent;
-    return this._userData;
+    return {
+      name: this.name,
+      about: this.about
+    }
   }
 
   setUserInfo(data) {
     this._userName.textContent = data.name;
     this._userAbout.textContent = data.about;
-    this._avatar.style.backgroundImage = `url("${data.avatar}")`;
+    return api.updateCurrentUser(data.name, data.about)
   }
 }

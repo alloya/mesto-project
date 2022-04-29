@@ -7,47 +7,45 @@ import {
   profileOpenButton,
   avatarEdit,
   avatarPopup,
-  avatarForm,
   formList,
   formElements,
   loadingBar,
   main,
   cardsContainer,
-  profileEditPopup,
-  cardEditPopup, profile
+  cardEditPopup,
+  profile,
+  profileNameInput, profileDescriptionInput, profileName, profileDescription
 } from './components/const';
-// import {enableValidation} from './components/validate';
 import {resetForm} from './components/modal';
 import {submitProfileForm, submitNewAvatar, setUserData, fillUserData} from './components/profile';
-// import {createCard} from './components/Card';
-// import { getCurrentUser, getCards } from './components/Api';
 import {setInvisible, setVisible, handleError} from './components/common';
 import {submitCardForm, removeCard} from './components/cardActions';
 import Card from './components/Card';
 import Api from './components/Api';
 import FormValidator from "./components/FormValidator";
-import Popup from "./components/Popup";
 import PopupWithForm from "./components/PopupWithForm";
 import UserInfo from "./components/UserInfo";
-const user = {};
+// let user = {};
 export const currUser = {};
-const api = new Api(auth);
+export const api = new Api(auth);
 const userInfo = new UserInfo(profile);
 
-api.getCurrentUser()
-  .then(res => {
-    user.id = res._id;
-    userInfo.setUserInfo(res)
+Promise.all([api.getCurrentUser(), api.getCards()])
+  .then(([userData, cardsData]) => {
+    userInfo.name = userData.name;
+    userInfo.about = userData.about;
+    userInfo.id = userData._id;
+    profileName.textContent = userData.name;
+    profileDescription.textContent = userData.about;
+    avatarEdit.style.backgroundImage = `url("${userData.avatar}")`
+    initializeCardsList(cardsData, userInfo.id);
   })
-  .catch(err => console.log('Error: ' + err));
-
-api.getCards()
-  .then(res => initializeCardsList(res, user.id))
   .then(() => {
     setInvisible(loadingBar);
     setVisible(main);
   })
   .catch(err => console.log('Error: ' + err))
+
 
 function initializeCardsList(cardList, userId) {
   if (cardList.length) {
@@ -58,9 +56,22 @@ function initializeCardsList(cardList, userId) {
   }
 }
 
+export const profileEditPopup = new PopupWithForm(profilePopup, () => {
+  profileEditPopup.loading(true);
+  const profileData = {
+    name: profileNameInput.value,
+    about: profileDescriptionInput.value
+  }
+  userInfo.setUserInfo(profileData)
+    .then(() => {
+      profileEditPopup.loading(false)
+    });
+});
+
 profileOpenButton.addEventListener('click', () => {
-  resetForm(profilePopup);
-  setUserData();
+  const profile = userInfo.getUserInfo();
+  profileNameInput.value = profile.name;
+  profileDescriptionInput.value = profile.about;
   profileEditPopup.open();
   profileEditPopup.setEventListeners();
 });
@@ -81,9 +92,6 @@ avatarEdit.addEventListener('click', () => {
   avatarEditPopup.open();
   avatarEditPopup.setEventListeners();
 });
-
-// avatarForm.addEventListener('submit', submitNewAvatar);
-// enableValidation(formList, formElements, errorObject);
 
 formList.forEach(form => {
   const formValidator = new FormValidator(formElements, form);
