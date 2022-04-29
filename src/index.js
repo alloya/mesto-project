@@ -66,10 +66,8 @@ function createCard(data) {
 
 const cardEditPopup = new PopupWithForm(cardPopup, data => {
   cardEditPopup.loading(true);
-  console.log(data);
   api.createNewCard(data)
     .then(res => {
-      console.log(res);
       return createCard(res)
     })
     .catch(err => console.log(err))
