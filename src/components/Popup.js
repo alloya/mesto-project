@@ -1,3 +1,5 @@
+import {formElementClass} from "./const";
+
 export default class Popup {
   constructor(popupSelector) {
     this._popup = popupSelector;
@@ -29,5 +31,10 @@ export default class Popup {
     const closePopupButton = this._popup.querySelector('.popup__close');
     closePopupButton.addEventListener('click',() => this.close());
     this._popup.addEventListener('click', this._handlePopupOverlayClick)
+  }
+
+  reset(){
+    const form = this._popup.querySelector(formElementClass);
+    form.reset();
   }
 }
