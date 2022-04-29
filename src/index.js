@@ -25,10 +25,18 @@ import Api from './components/Api';
 import FormValidator from "./components/FormValidator";
 import PopupWithForm from "./components/PopupWithForm";
 import UserInfo from "./components/UserInfo";
+import Section from './components/Section';
 // let user = {};
 export const currUser = {};
 export const api = new Api(auth);
 const userInfo = new UserInfo(profile);
+
+const cardList = new Section({
+  renderer: (item) => {
+    const card = new Card(item, userInfo.id, '#card-template', null);
+    cardList.addItem(card.createCard());
+  }
+}, cardsContainer)
 
 Promise.all([api.getCurrentUser(), api.getCards()])
   .then(([userData, cardsData]) => {
@@ -37,8 +45,9 @@ Promise.all([api.getCurrentUser(), api.getCards()])
     userInfo.id = userData._id;
     profileName.textContent = userData.name;
     profileDescription.textContent = userData.about;
-    avatarEdit.style.backgroundImage = `url("${userData.avatar}")`
-    initializeCardsList(cardsData, userInfo.id);
+    avatarEdit.style.backgroundImage = `url("${userData.avatar}")`;
+    cardList.render(cardsData);
+    //initializeCardsList(cardsData, userInfo.id);
   })
   .then(() => {
     setInvisible(loadingBar);
@@ -47,14 +56,15 @@ Promise.all([api.getCurrentUser(), api.getCards()])
   .catch(err => console.log('Error: ' + err))
 
 
-function initializeCardsList(cardList, userId) {
-  if (cardList.length) {
-    cardList.forEach(el => {
-      const card = new Card(el, userId, '#card-template', null)
-      cardsContainer.append(card.createCard())
-    });
-  }
-}
+
+// function initializeCardsList(cardList, userId) {
+//   if (cardList.length) {
+//     cardList.forEach(el => {
+//       const card = new Card(el, userId, '#card-template', null)
+//       cardsContainer.append(card.createCard())
+//     });
+//   }
+// }
 
 export const profileEditPopup = new PopupWithForm(profilePopup, () => {
   profileEditPopup.loading(true);
