@@ -1,5 +1,3 @@
-import {api} from "../index";
-
 export default class UserInfo {
   constructor(profile) {
     this._userName = profile.name;
@@ -20,6 +18,7 @@ export default class UserInfo {
   setUserInfo(data) {
     this._userName.textContent = data.name;
     this._userAbout.textContent = data.about;
-    return api.updateCurrentUser(data.name, data.about)
+    this.name = data.name;
+    this.about = data.about;
   }
 }
