@@ -95,6 +95,6 @@ export default class Card {
       return;
     }
 
-    this._cardDelete.addEventListener('click', () => this._handleDelete(this._card._id));
+    this._cardDelete.addEventListener('click', () => this._handleDelete(this));
   }
 }

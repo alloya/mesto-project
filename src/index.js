@@ -30,7 +30,7 @@ const userInfo = new UserInfo(profile);
 
 const cardList = new Section({
   renderer: (item) => {
-    const card = new Card(item, userInfo.id, '#card-template', handleCardClick);
+    const card = new Card(item, userInfo.id, '#card-template', handleCardClick, deleteCard);
     cardList.addItem(card.createCard());
   }
 }, cardsContainer)
@@ -63,7 +63,7 @@ function handleCardClick(title, link) {
 
 function createCard(data) {
   const card = new Card(data, userInfo.id, '#card-template', handleCardClick, deleteCard);
-  cardsContainer.prepend(card.createCard());
+  cardList.addItem(card.createCard());
 }
 
 const cardEditPopup = new PopupWithForm(cardPopup, data => {
@@ -97,22 +97,14 @@ const avatarEditPopup = new PopupWithForm(avatarPopup, data => {
 });
 
 const deletePopup = new PopupWithDelete(deletePopupSelector, card => {
-  debugger
-  deletePopup.open(card);
-  
-});
-
-// const deleteCardHandler = (cardToDelete) => {
-//   deletePopup.open(cardToDelete);
-//   deletePopup.setEventListeners('submit', )
-  
-// }
-
-function deleteCard(card){
   api.deleteCard(card.getCardId())
     .then(card.deleteCard())
     .catch(err => console.log(err))
     .finally(deletePopup.close())
+});
+
+function deleteCard(card) {
+  deletePopup.open(card);
 }
 
 profileOpenButton.addEventListener('click', () => {
