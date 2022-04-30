@@ -30,7 +30,7 @@ const userInfo = new UserInfo(profile);
 
 const cardList = new Section({
   renderer: (item) => {
-    const card = new Card(item, userInfo.id, '#card-template', handleCardClick);
+    const card = new Card(item, userInfo.id, '#card-template', handleCardClick, deleteCard);
     cardList.addItem(card.createCard());
   }
 }, cardsContainer)
@@ -52,17 +52,6 @@ Promise.all([api.getCurrentUser(), api.getCards()])
   })
   .catch(err => console.log('Error: ' + err))
 
-
-
-// function initializeCardsList(cardList, userId) {
-//   if (cardList.length) {
-//     cardList.forEach(el => {
-//       const card = new Card(el, userId, '#card-template', null)
-//       cardsContainer.append(card.createCard())
-//     });
-//   }
-// }
-
 function handleCardClick(title, link) {
   const card = {
     url: link,
@@ -74,7 +63,7 @@ function handleCardClick(title, link) {
 
 function createCard(data) {
   const card = new Card(data, userInfo.id, '#card-template', handleCardClick, deleteCard);
-  cardsContainer.prepend(card.createCard());
+  cardList.addItem(card.createCard());
 }
 
 const cardEditPopup = new PopupWithForm(cardPopup, data => {
@@ -107,11 +96,14 @@ const avatarEditPopup = new PopupWithForm(avatarPopup, data => {
     .finally(() => avatarEditPopup.loading(false))
 });
 
-export const deletePopup = new PopupWithDelete(deletePopupSelector, (card)=> {
-  deleteCard(card)
+const deletePopup = new PopupWithDelete(deletePopupSelector, card => {
+  api.deleteCard(card.getCardId())
+    .then(card.deleteCard())
+    .catch(err => console.log(err))
+    .finally(deletePopup.close())
 });
 
-function deleteCard(card){
+function deleteCard(card) {
   deletePopup.open(card);
 }
 
