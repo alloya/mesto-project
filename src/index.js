@@ -44,7 +44,6 @@ Promise.all([api.getCurrentUser(), api.getCards()])
     profileDescription.textContent = userData.about;
     avatarEdit.style.backgroundImage = `url("${userData.avatar}")`;
     cardList.render(cardsList.reverse());
-    //initializeCardsList(cardsData, userInfo.id);
   })
   .then(() => {
     setInvisible(loadingBar);
@@ -82,10 +81,12 @@ const profileEditPopup = new PopupWithForm(profilePopup, () => {
     name: profileNameInput.value,
     about: profileDescriptionInput.value
   }
-  userInfo.setUserInfo(profileData)
-    .then(() => {
-      profileEditPopup.loading(false)
-    });
+  api.updateCurrentUser(profileData)
+    .then (res => {
+      userInfo.setUserInfo(res)
+    })
+    .catch(err => handleError(err))
+    .finally(profileEditPopup.loading(false));
 });
 
 const avatarEditPopup = new PopupWithForm(avatarPopup, data => {
@@ -99,7 +100,7 @@ const avatarEditPopup = new PopupWithForm(avatarPopup, data => {
 const deletePopup = new PopupWithDelete(deletePopupSelector, card => {
   api.deleteCard(card.getCardId())
     .then(card.deleteCard())
-    .catch(err => console.log(err))
+    .catch(err => handleError(err))
     .finally(deletePopup.close())
 });
 
@@ -111,6 +112,7 @@ profileOpenButton.addEventListener('click', () => {
   const profile = userInfo.getUserInfo();
   profileNameInput.value = profile.name;
   profileDescriptionInput.value = profile.about;
+
   profileEditPopup.open();
   profileEditPopup.setEventListeners();
 });

@@ -29,7 +29,7 @@ export default class Api {
       .then(this._handleResponse);
   }
 
-  updateCurrentUser(name, about) {
+  updateCurrentUser({ name, about }) {
     return fetch(`${this._url}/users/me`, {
       method: "PATCH",
       headers: {
