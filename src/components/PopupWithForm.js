@@ -1,6 +1,7 @@
 import Popup from "./Popup";
 import {btnText, cardPopup, formElements} from "./const";
 import FormValidator from "./FormValidator";
+import { disableButton } from "./common";
 
 export default class PopupWithForm extends Popup {
   constructor(popupSelector, submitCallback) {
@@ -22,8 +23,8 @@ export default class PopupWithForm extends Popup {
 
   _handleFormSubmit = evt => {
     evt.preventDefault();
+    disableButton(this._submit);
     this._submitCallback(this._getInputValues());
-    this.close();
   }
 
   setEventListeners() {

@@ -38,7 +38,7 @@ export const profile = {
   avatar: avatarEdit
 }
 
-export const deletePopupSelector = document.querySelector('.delete_popup');
+export const deleteConfirmPopup = document.querySelector('.delete_popup');
 
 export const errorPopup = new Popup(document.querySelector('.error-popup'));
 export const popupWithFullImage = new PopupWithImage(fullImagePopup);
