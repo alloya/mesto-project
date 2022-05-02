@@ -2,7 +2,7 @@
 // import {api} from "../index";
 
 export default class Card {
-  constructor(card, currentUserId, selector, handleCardClick,handleLikeClick, handleDelete) {
+  constructor(card, currentUserId, selector, handleCardClick, handleLikeClick, handleDelete) {
     this._userId = currentUserId;
     this._selector = selector;
     this._title = card.name;
@@ -46,7 +46,7 @@ export default class Card {
   }
 
   _setEventListeners() {
-    this._cardLike.addEventListener('click', () => this._handleLikeClick(this.getCardId(), this.manageLikes, !this.isLiked()));
+    this._cardLike.addEventListener('click', () => this._handleLikeClick(this.getCardId(), this.manageLikes.bind(this), this.isLiked()));
     this._cardImg.addEventListener('click', () => this._handleCardClick(this._title, this._link));
   }
 
@@ -66,9 +66,15 @@ export default class Card {
   }
 
   manageLikes(cardObject, userId = this._userId) {
-    debugger
-    cardObject.likes.some(like => like._id === userId)
-      ? this._setLike() : this._removeLike();
+    // debugger
+    // console.log(cardObject.likes.forEach(item => console.log(item._id === userId)))
+    // console.log('user in likes ', cardObject.likes.some(like => like._id === this._userId))
+    if (this.isLiked()) {
+      this._setLike(this) }
+    else { this._removeLike(this)}
+    console.log(cardObject)
+    // cardObject.likes.some(like =>
+    //   like._id === userId) ? this._setLike() : this._removeLike();
     this._likeCounter.textContent = cardObject.likes && cardObject.likes.length || 0;
   }
 

@@ -30,7 +30,7 @@ const userInfo = new UserInfo(profile);
 
 const cardList = new Section({
   renderer: (item) => {
-    const card = new Card(item, userInfo.id, '#card-template', handleCardClick, handleLikeClick, deleteCard);
+    const card = new Card(item, userInfo.id, '#card-template', handleCardClick, handleLikeClick.bind(this), deleteCard);
     const newCard = card.createCard();
     //card.manageLikes(item);
     cardList.addItem(newCard);
@@ -54,25 +54,36 @@ Promise.all([api.getCurrentUser(), api.getCards()])
   .catch(err => console.log('Error: ' + err))
 
 function handleLikeClick(cardId, manageLikesFunction, putLike) {
-  putLike ? api.putLike(cardId) : api.deleteLike(cardId)
+  !putLike ? addLike(cardId, manageLikesFunction) : removeLike(cardId, manageLikesFunction);
+  // putLike ? api.putLike(cardId) : api.deleteLike(cardId).then(response => {
+  //     console.log(response)
+  //     // debugger
+  //     manageLikesFunction(response, userInfo.id)
+  //   })
+  //   .catch(err => handleError(err))
+}
+
+function addLike(cardId, manageLikesFunction) {
+  console.log('like Added')
+  api.putLike(cardId)
     .then(response => {
-      debugger 
+      console.log(response)
+      // debugger;
       manageLikesFunction(response, userInfo.id)
     })
     .catch(err => handleError(err))
 }
 
-// function addLike(cardId, manageLikesFunction) {
-//   api.putLike(cardId)
-//     .then(response => {debugger; manageLikesFunction(response, userInfo.id)})
-//     .catch(err => handleError(err))
-// }
-
-// function removeLike(cardId, manageLikesFunction) {
-//   api.deleteLike(cardId)
-//     .then(response => {debugger; manageLikesFunction(response, userInfo.id)})
-//     .catch(err => handleError(err))
-// }
+function removeLike(cardId, manageLikesFunction) {
+  console.log('like removed')
+  api.deleteLike(cardId)
+    .then(response => {
+      console.log(response)
+      // debugger;
+      manageLikesFunction(response, userInfo.id)
+    })
+    .catch(err => handleError(err))
+}
 
 function handleCardClick(title, link) {
   const card = {
@@ -105,7 +116,7 @@ const profileEditPopup = new PopupWithForm(profilePopup, () => {
     about: profileDescriptionInput.value
   }
   api.updateCurrentUser(profileData)
-    .then (res => {
+    .then(res => {
       userInfo.setUserInfo(res)
     })
     .catch(err => handleError(err))
