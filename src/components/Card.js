@@ -1,8 +1,8 @@
-import {handleError} from "./common";
-import {api} from "../index";
+// import {handleError} from "./common";
+// import {api} from "../index";
 
 export default class Card {
-  constructor(card, currentUserId, selector, handleCardClick, handleDelete) {
+  constructor(card, currentUserId, selector, handleCardClick,handleLikeClick, handleDelete) {
     this._userId = currentUserId;
     this._selector = selector;
     this._title = card.name;
@@ -10,6 +10,7 @@ export default class Card {
     this._link = card.link;
     this._likeCounter = card.likes.length;
     this._handleCardClick = handleCardClick;
+    this._handleLikeClick = handleLikeClick;
     this._handleDelete = handleDelete;
   }
 
@@ -29,26 +30,23 @@ export default class Card {
     this._cardElement.querySelector('.card__title').textContent = this._title;
     this._cardImg = this._createImg(this._link);
     this._cardElement.prepend(this._cardImg);
-    this._manageLikes(this._cardLike, this._card);
+    this.manageLikes(this._card);
     this._manageBins(this._card);
     this._setEventListeners();
     return this._cardElement;
   }
 
   isLiked() {
-    this._card.likes.forEach(item => {
-        item._id === this._userId ? true : false
-      }
-    )
+    console.log('isLiked =', this._card.likes.some(like => like._id === this._userId))
+    return this._card.likes.some(like => like._id === this._userId)
   }
 
   deleteCard(){
     this._cardElement.remove();
-
   }
 
   _setEventListeners() {
-    this._cardLike.addEventListener('click', (evt) => this._handleLikeClick(evt, this.getCardId()));
+    this._cardLike.addEventListener('click', () => this._handleLikeClick(this.getCardId(), this.manageLikes, !this.isLiked()));
     this._cardImg.addEventListener('click', () => this._handleCardClick(this._title, this._link));
   }
 
@@ -59,35 +57,45 @@ export default class Card {
     return image;
   }
 
-  _manageLikes(likeElement, card) {
-    card.likes.some((like => like._id === this._userId))
-      ? likeElement.classList.add('card__like_inverted')
-      : likeElement.classList.remove('card__like_inverted');
-    this._likeCounter.textContent = card.likes && card.likes.length || 0;
+  _setLike() {
+    this._cardLike.classList.add('card__like_inverted');
   }
 
-  _handleLikeClick(evt, cardId) {
-    evt.target.setAttribute('disabled', '');
-    if (evt.target.classList.contains('card__like_inverted')) {
-      api.deleteLike(cardId)
-        .then(cardResponse => {
-          this._manageLikes(evt.target, cardResponse);
-        })
-        .catch(err => handleError(err))
-        .finally(() => {
-          evt.target.removeAttribute('disabled', '');
-        });
-    } else {
-      api.putLike(cardId)
-        .then(cardResponse => {
-          this._manageLikes(evt.target, cardResponse)
-        })
-        .catch(err => handleError(err))
-        .finally(() => {
-          evt.target.removeAttribute('disabled', '');
-        });
-    }
+  _removeLike() {
+    this._cardLike.classList.remove('card__like_inverted');
   }
+
+  manageLikes(cardObject, userId = this._userId) {
+    debugger
+    cardObject.likes.some(like => like._id === userId)
+      ? this._setLike() : this._removeLike();
+    this._likeCounter.textContent = cardObject.likes && cardObject.likes.length || 0;
+  }
+
+
+
+  // _handleLikeClick(evt, cardId) {
+  //   evt.target.setAttribute('disabled', '');
+  //   if (evt.target.classList.contains('card__like_inverted')) {
+  //     api.deleteLike(cardId)
+  //       .then(cardResponse => {
+  //         this._manageLikes(evt.target, cardResponse);
+  //       })
+  //       .catch(err => handleError(err))
+  //       .finally(() => {
+  //         evt.target.removeAttribute('disabled', '');
+  //       });
+  //   } else {
+  //     api.putLike(cardId)
+  //       .then(cardResponse => {
+  //         this._manageLikes(evt.target, cardResponse)
+  //       })
+  //       .catch(err => handleError(err))
+  //       .finally(() => {
+  //         evt.target.removeAttribute('disabled', '');
+  //       });
+  //   }
+  // }
 
   _manageBins() {
     if (this._card.owner._id !== this._userId) {
