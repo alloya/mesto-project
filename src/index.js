@@ -13,7 +13,7 @@ import {
   main,
   cardsContainer,
   profile,
-  profileNameInput, profileDescriptionInput, profileName, profileDescription, popupWithFullImage, deletePopupSelector
+  profileNameInput, profileDescriptionInput, profileName, profileDescription, popupWithFullImage, deleteConfirmPopup
 } from './components/const';
 import {setInvisible, setVisible, handleError} from './components/common';
 import Card from './components/Card';
@@ -71,8 +71,11 @@ const cardEditPopup = new PopupWithForm(cardPopup, data => {
     .then(res => {
       return createCard(res)
     })
-    .catch(err => console.log(err))
-    .finally(cardEditPopup.loading(false));
+    .catch(err => handleError(err))
+    .finally(() => {
+      cardEditPopup.close();
+      cardEditPopup.loading(false)
+    });
 });
 
 const profileEditPopup = new PopupWithForm(profilePopup, () => {
@@ -86,7 +89,10 @@ const profileEditPopup = new PopupWithForm(profilePopup, () => {
       userInfo.setUserInfo(res)
     })
     .catch(err => handleError(err))
-    .finally(profileEditPopup.loading(false));
+    .finally(() => {
+      profileEditPopup.close();
+      profileEditPopup.loading(false);
+    });
 });
 
 const avatarEditPopup = new PopupWithForm(avatarPopup, data => {
@@ -94,14 +100,17 @@ const avatarEditPopup = new PopupWithForm(avatarPopup, data => {
   api.updateCurrentUserAvatar(data)
     .then(res => avatarEdit.style.backgroundImage = `url('${res.avatar}')`)
     .catch(err => handleError(err))
-    .finally(() => avatarEditPopup.loading(false))
+    .finally(() => {
+      avatarEditPopup.close();
+      avatarEditPopup.loading(false);
+    })
 });
 
-const deletePopup = new PopupWithDelete(deletePopupSelector, card => {
+const deletePopup = new PopupWithDelete(deleteConfirmPopup, card => {
   api.deleteCard(card.getCardId())
-    .then(card.deleteCard())
+    .then(() => card.deleteCard())
     .catch(err => handleError(err))
-    .finally(deletePopup.close())
+    .finally(() => deletePopup.close())
 });
 
 function deleteCard(card) {
