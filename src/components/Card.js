@@ -1,8 +1,5 @@
-import {handleError} from "./common";
-import {api} from "../index";
-
 export default class Card {
-  constructor(card, currentUserId, selector, handleCardClick, handleDelete) {
+  constructor(card, currentUserId, selector, handleCardClick, handleLikeClick, handleDelete) {
     this._userId = currentUserId;
     this._selector = selector;
     this._title = card.name;
@@ -10,6 +7,7 @@ export default class Card {
     this._link = card.link;
     this._likeCounter = card.likes.length;
     this._handleCardClick = handleCardClick;
+    this._handleLikeClick = handleLikeClick;
     this._handleDelete = handleDelete;
   }
 
@@ -29,26 +27,22 @@ export default class Card {
     this._cardElement.querySelector('.card__title').textContent = this._title;
     this._cardImg = this._createImg(this._link);
     this._cardElement.prepend(this._cardImg);
-    this._manageLikes(this._cardLike, this._card);
+    this.manageLikes(this._card);
     this._manageBins(this._card);
     this._setEventListeners();
     return this._cardElement;
   }
 
   isLiked() {
-    this._card.likes.forEach(item => {
-        item._id === this._userId ? true : false
-      }
-    )
+    return this._card.likes.some(like => like._id === this._userId)
   }
 
   deleteCard(){
     this._cardElement.remove();
-
   }
 
   _setEventListeners() {
-    this._cardLike.addEventListener('click', (evt) => this._handleLikeClick(evt, this.getCardId()));
+    this._cardLike.addEventListener('click', () => this._handleLikeClick(this, !this.isLiked()));
     this._cardImg.addEventListener('click', () => this._handleCardClick(this._title, this._link));
   }
 
@@ -59,34 +53,19 @@ export default class Card {
     return image;
   }
 
-  _manageLikes(likeElement, card) {
-    card.likes.some((like => like._id === this._userId))
-      ? likeElement.classList.add('card__like_inverted')
-      : likeElement.classList.remove('card__like_inverted');
-    this._likeCounter.textContent = card.likes && card.likes.length || 0;
+  _setLike(likeElement) {
+    likeElement.classList.add('card__like_inverted');
   }
 
-  _handleLikeClick(evt, cardId) {
-    evt.target.setAttribute('disabled', '');
-    if (evt.target.classList.contains('card__like_inverted')) {
-      api.deleteLike(cardId)
-        .then(cardResponse => {
-          this._manageLikes(evt.target, cardResponse);
-        })
-        .catch(err => handleError(err))
-        .finally(() => {
-          evt.target.removeAttribute('disabled', '');
-        });
-    } else {
-      api.putLike(cardId)
-        .then(cardResponse => {
-          this._manageLikes(evt.target, cardResponse)
-        })
-        .catch(err => handleError(err))
-        .finally(() => {
-          evt.target.removeAttribute('disabled', '');
-        });
-    }
+  _removeLike(likeElement) {
+    likeElement.classList.remove('card__like_inverted');
+  }
+
+  manageLikes(card) {
+    card.likes.some(like => like._id === this._userId)
+      ? this._setLike(this._cardLike) : this._removeLike(this._cardLike);
+    this._likeCounter.textContent = card.likes && card.likes.length || 0;
+    this._card = card;
   }
 
   _manageBins() {
@@ -94,7 +73,6 @@ export default class Card {
       this._cardDelete.remove();
       return;
     }
-
     this._cardDelete.addEventListener('click', () => this._handleDelete(this));
   }
 }

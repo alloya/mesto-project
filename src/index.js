@@ -15,7 +15,7 @@ import {
   profile,
   profileNameInput, profileDescriptionInput, profileName, profileDescription, popupWithFullImage, deleteConfirmPopup
 } from './components/const';
-import {setInvisible, setVisible, handleError} from './components/common';
+import {setInvisible, setVisible, handleError, disableButton} from './components/common';
 import Card from './components/Card';
 import Api from './components/Api';
 import FormValidator from "./components/FormValidator";
@@ -30,7 +30,7 @@ const userInfo = new UserInfo(profile);
 
 const cardList = new Section({
   renderer: (item) => {
-    const card = new Card(item, userInfo.id, '#card-template', handleCardClick, deleteCard);
+    const card = new Card(item, userInfo.id, '#card-template', handleCardClick, handleLikeClick, deleteCard);
     cardList.addItem(card.createCard());
   }
 }, cardsContainer)
@@ -51,6 +51,22 @@ Promise.all([api.getCurrentUser(), api.getCards()])
   })
   .catch(err => console.log('Error: ' + err))
 
+function handleLikeClick(card, putLike) {
+  putLike ? addLike(card) : removeLike(card);
+}
+
+function addLike(card) {
+  api.putLike(card.getCardId())
+    .then(response => card.manageLikes(response))
+    .catch(err => handleError(err))
+}
+
+function removeLike(card) {
+  api.deleteLike(card.getCardId())
+    .then(response => card.manageLikes(response))
+    .catch(err => handleError(err))
+}
+
 function handleCardClick(title, link) {
   const card = {
     url: link,
@@ -61,7 +77,7 @@ function handleCardClick(title, link) {
 }
 
 function createCard(data) {
-  const card = new Card(data, userInfo.id, '#card-template', handleCardClick, deleteCard);
+  const card = new Card(data, userInfo.id, '#card-template', handleCardClick, handleLikeClick, deleteCard);
   cardList.addItem(card.createCard());
 }
 
@@ -85,7 +101,7 @@ const profileEditPopup = new PopupWithForm(profilePopup, () => {
     about: profileDescriptionInput.value
   }
   api.updateCurrentUser(profileData)
-    .then (res => {
+    .then(res => {
       userInfo.setUserInfo(res)
     })
     .catch(err => handleError(err))
