@@ -98,7 +98,7 @@ const profileEditPopup = new PopupWithForm(profilePopup, () => {
     about: profileDescriptionInput.value
   }
   api.updateCurrentUser(profileData)
-    .then (res => {
+    .then(res => {
       userInfo.setUserInfo(res)
     })
     .catch(err => handleError(err))
