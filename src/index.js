@@ -124,9 +124,9 @@ const avatarEditPopup = new PopupWithForm(avatarPopup, data => {
 
 const deletePopup = new PopupWithDelete(deleteConfirmPopup, card => {
   api.deleteCard(card.getCardId())
-    .then(() =>card.deleteCard())
+    .then(() => card.deleteCard())
     .catch(err => handleError(err))
-    .finally(() =>deletePopup.close())
+    .finally(() => deletePopup.close())
 });
 
 function deleteCard(card) {
