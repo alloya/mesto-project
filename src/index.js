@@ -15,7 +15,7 @@ import {
   profile,
   profileNameInput, profileDescriptionInput, profileName, profileDescription, popupWithFullImage, deleteConfirmPopup
 } from './components/const';
-import {setInvisible, setVisible, handleError} from './components/common';
+import {setInvisible, setVisible, handleError, disableButton} from './components/common';
 import Card from './components/Card';
 import Api from './components/Api';
 import FormValidator from "./components/FormValidator";
@@ -31,9 +31,7 @@ const userInfo = new UserInfo(profile);
 const cardList = new Section({
   renderer: (item) => {
     const card = new Card(item, userInfo.id, '#card-template', handleCardClick, handleLikeClick, deleteCard);
-    const newCard = card.createCard();
-    //card.manageLikes(item);
-    cardList.addItem(newCard);
+    cardList.addItem(card.createCard());
   }
 }, cardsContainer)
 
@@ -53,26 +51,21 @@ Promise.all([api.getCurrentUser(), api.getCards()])
   })
   .catch(err => console.log('Error: ' + err))
 
-function handleLikeClick(cardId, manageLikesFunction, putLike) {
-  putLike ? api.putLike(cardId) : api.deleteLike(cardId)
-    .then(response => {
-      debugger 
-      manageLikesFunction(response, userInfo.id)
-    })
+function handleLikeClick(card, putLike) {
+  putLike ? addLike(card) : removeLike(card);
+}
+
+function addLike(card) {
+  api.putLike(card.getCardId())
+    .then(response => card.manageLikes(response))
     .catch(err => handleError(err))
 }
 
-// function addLike(cardId, manageLikesFunction) {
-//   api.putLike(cardId)
-//     .then(response => {debugger; manageLikesFunction(response, userInfo.id)})
-//     .catch(err => handleError(err))
-// }
-
-// function removeLike(cardId, manageLikesFunction) {
-//   api.deleteLike(cardId)
-//     .then(response => {debugger; manageLikesFunction(response, userInfo.id)})
-//     .catch(err => handleError(err))
-// }
+function removeLike(card) {
+  api.deleteLike(card.getCardId())
+    .then(response => card.manageLikes(response))
+    .catch(err => handleError(err))
+}
 
 function handleCardClick(title, link) {
   const card = {
