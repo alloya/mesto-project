@@ -76,17 +76,35 @@ function handleCardClick(title, link) {
   popupWithFullImage.setEventListeners();
 }
 
-function createCard(data) {
-  const card = new Card(data, userInfo.id, '#card-template', handleCardClick, handleLikeClick, deleteCard);
+function createCard(imageElement, data) {
+  const card = new Card(data, userInfo.id, '#card-template', handleCardClick, handleLikeClick, deleteCard, imageElement);
   cardList.addItem(card.createCard());
+}
+
+function loadImage(src) {
+  const image = document.createElement('img');
+  image.src = src;
+
+  return new Promise((resolve, reject) => {
+    image.onerror = reject;
+    image.onload = resolve;
+  })
 }
 
 const cardEditPopup = new PopupWithForm(cardPopup, data => {
   cardEditPopup.loading(true);
-  api.createNewCard(data)
-    .then(res => {
-      return createCard(res)
-    })
+  const loadImagePromise = loadImage(data.cardLink)
+    .then((res) => { return res.target })
+
+  const postCard = loadImagePromise
+    .then(res => res && api.createNewCard(data))
+    .catch(err => {
+      err.message = "Не удалось загрузить изображение. Проверьте правильность ссылки и ваше сетевое соединение.";
+      return err;
+    });
+
+  Promise.all([loadImagePromise, postCard])
+    .then(([loadedImgElement, card]) => createCard(loadedImgElement, card))
     .catch(err => handleError(err))
     .finally(() => {
       cardEditPopup.close();
@@ -113,13 +131,21 @@ const profileEditPopup = new PopupWithForm(profilePopup, () => {
 
 const avatarEditPopup = new PopupWithForm(avatarPopup, data => {
   avatarEditPopup.loading(true);
-  api.updateCurrentUserAvatar(data)
-    .then(res => avatarEdit.style.backgroundImage = `url('${res.avatar}')`)
-    .catch(err => handleError(err))
-    .finally(() => {
-      avatarEditPopup.close();
-      avatarEditPopup.loading(false);
+  const checkUrl = loadImage(data.avatarUrl);
+  const loadAvatar = checkUrl
+    .then(res => { return api.updateCurrentUserAvatar(data) })
+    .catch(err => {
+      err.message = "Не удалось загрузить изображение. Проверьте правильность ссылки и ваше сетевое соединение.";
+      return err;
     })
+
+    Promise.all([checkUrl, loadAvatar])
+      .then(([check, res]) => avatarEdit.style.backgroundImage = `url('${res.avatar}')`)
+      .catch(err => handleError(err))
+      .finally(() => {
+        avatarEditPopup.close();
+        avatarEditPopup.loading(false);
+      })
 });
 
 const deletePopup = new PopupWithDelete(deleteConfirmPopup, card => {

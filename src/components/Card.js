@@ -1,5 +1,5 @@
 export default class Card {
-  constructor(card, currentUserId, selector, handleCardClick, handleLikeClick, handleDelete) {
+  constructor(card, currentUserId, selector, handleCardClick, handleLikeClick, handleDelete, image) {
     this._userId = currentUserId;
     this._selector = selector;
     this._title = card.name;
@@ -9,6 +9,7 @@ export default class Card {
     this._handleCardClick = handleCardClick;
     this._handleLikeClick = handleLikeClick;
     this._handleDelete = handleDelete;
+    this._image = image;
   }
 
   getCardId() {
@@ -25,7 +26,7 @@ export default class Card {
     this._cardLike = this._cardElement.querySelector('.card__like');
     this._likeCounter = this._cardElement.querySelector('.card__like-counter');
     this._cardElement.querySelector('.card__title').textContent = this._title;
-    this._cardImg = this._createImg(this._link);
+    this._cardImg = this.createImg(this._link);
     this._cardElement.prepend(this._cardImg);
     this.manageLikes(this._card);
     this._manageBins(this._card);
@@ -46,7 +47,11 @@ export default class Card {
     this._cardImg.addEventListener('click', () => this._handleCardClick(this._title, this._link));
   }
 
-  _createImg(imageSrc) {
+  createImg(imageSrc) {
+    if (this._image) {
+      this._image.classList.add('card__picture');
+      return this._image;
+    }
     const image = document.createElement('img');
     image.src = imageSrc;
     image.classList.add('card__picture');

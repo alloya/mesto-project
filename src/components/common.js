@@ -28,7 +28,7 @@ export function enableButton(btn) {
 }
 
 export function handleError(err) {
-  console.log(err.message || err)
+  console.log(err && err.message || err)
   errorText.textContent = err && err.message || err;
   errorPopup.open();
   setTimeout(() => {errorPopup.close()}, 2000);
