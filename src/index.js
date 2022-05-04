@@ -37,8 +37,7 @@ export const errorPopup = new Popup(document.querySelector('.error-popup'));
 export const popupWithFullImage = new PopupWithImage(fullImagePopup);
 const cardList = new Section({
   renderer: (item) => {
-    const card = new Card(item, userInfo.id, '#card-template', handleCardClick, handleLikeClick, deleteCard);
-    cardList.addItem(card.createCard());
+    createCard(item)
   }
 }, cardsContainer)
 
@@ -83,7 +82,7 @@ function handleCardClick(title, link) {
   popupWithFullImage.setEventListeners();
 }
 
-function createCard(imageElement, data) {
+function createCard(data, imageElement) {
   const card = new Card(data, userInfo.id, '#card-template', handleCardClick, handleLikeClick, deleteCard, imageElement);
   cardList.addItem(card.createCard());
 }
@@ -110,13 +109,13 @@ const cardEditPopup = new PopupWithForm(cardPopup, data => {
       return err;
     });
 
-  Promise.all([loadImagePromise, postCard])
-    .then(([loadedImgElement, card]) => createCard(loadedImgElement, card))
-    .catch(err => handleError(err))
-    .finally(() => {
+  Promise.all([postCard, loadImagePromise])
+    .then(([card, loadedImgElement ]) => createCard(card, loadedImgElement))
+    .then(() => {
       cardEditPopup.close();
       cardEditPopup.loading(false)
-    });
+    })
+    .catch(err => handleError(err))
 });
 
 const profileEditPopup = new PopupWithForm(profilePopup, () => {
@@ -129,11 +128,11 @@ const profileEditPopup = new PopupWithForm(profilePopup, () => {
     .then(res => {
       userInfo.setUserInfo(res)
     })
-    .catch(err => handleError(err))
-    .finally(() => {
+    .then(() => {
       profileEditPopup.close();
       profileEditPopup.loading(false);
-    });
+    })
+    .catch(err => handleError(err))
 });
 
 const avatarEditPopup = new PopupWithForm(avatarPopup, data => {
@@ -148,18 +147,18 @@ const avatarEditPopup = new PopupWithForm(avatarPopup, data => {
 
     Promise.all([checkUrl, loadAvatar])
       .then(([check, res]) => avatarEdit.style.backgroundImage = `url('${res.avatar}')`)
-      .catch(err => handleError(err))
-      .finally(() => {
+      .then(() => {
         avatarEditPopup.close();
         avatarEditPopup.loading(false);
       })
+      .catch(err => handleError(err))
 });
 
 const deletePopup = new PopupWithDelete(deleteConfirmPopup, card => {
   api.deleteCard(card.getCardId())
     .then(() => card.deleteCard())
+    .then(() => deletePopup.close())
     .catch(err => handleError(err))
-    .finally(() => deletePopup.close())
 });
 
 function deleteCard(card) {
