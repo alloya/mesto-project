@@ -1,4 +1,6 @@
-import { btnText, errorPopup, errorText, formElements } from "./const";
+import { btnText, errorText, formElements } from "./const";
+import {errorPopup} from "../index";
+
 export function setVisible(element) {
   element.classList.remove('d-none');
 }

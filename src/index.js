@@ -13,7 +13,12 @@ import {
   main,
   cardsContainer,
   profile,
-  profileNameInput, profileDescriptionInput, profileName, profileDescription, popupWithFullImage, deleteConfirmPopup
+  profileNameInput,
+  profileDescriptionInput,
+  profileName,
+  profileDescription,
+  deleteConfirmPopup,
+  fullImagePopup
 } from './components/const';
 import {setInvisible, setVisible, handleError, disableButton} from './components/common';
 import Card from './components/Card';
@@ -23,11 +28,13 @@ import PopupWithForm from "./components/PopupWithForm";
 import UserInfo from "./components/UserInfo";
 import PopupWithDelete from "./components/PopupWithDelete";
 import Section from './components/Section';
-
+import Popup from "./components/Popup";
+import PopupWithImage from "./components/PopupWithImage";
 
 export const api = new Api(auth);
 const userInfo = new UserInfo(profile);
-
+export const errorPopup = new Popup(document.querySelector('.error-popup'));
+export const popupWithFullImage = new PopupWithImage(fullImagePopup);
 const cardList = new Section({
   renderer: (item) => {
     const card = new Card(item, userInfo.id, '#card-template', handleCardClick, handleLikeClick, deleteCard);

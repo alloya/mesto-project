@@ -40,9 +40,6 @@ export const profile = {
 
 export const deleteConfirmPopup = document.querySelector('.delete_popup');
 
-export const errorPopup = new Popup(document.querySelector('.error-popup'));
-export const popupWithFullImage = new PopupWithImage(fullImagePopup);
-
 // export const cardSaveButton = document.querySelector(".cards_popup .popup__button-save");
 // export const cardsCloseButton = document.querySelector(".cards_popup .popup__close");
 // export const cardNameInput = document.querySelector(".card__input-name");

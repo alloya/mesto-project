@@ -1,4 +1,4 @@
-import { disableButton, enableButton } from "./common";
+// import { disableButton, enableButton } from "./common";
 import Popup from "./Popup";
 
 export default class PopupWithDelete extends Popup {
@@ -13,12 +13,12 @@ export default class PopupWithDelete extends Popup {
     super.open();
     this._card = card;
     this.setEventListeners();
-    enableButton(this._submitButton);
+    // enableButton(this._submitButton);
   }
 
   _handleDelete = evt => {
     evt.preventDefault();
-    disableButton(this._submitButton);
+    // disableButton(this._submitButton);
     this._submitCallback(this._card);
   }
 
@@ -27,8 +27,8 @@ export default class PopupWithDelete extends Popup {
     this._form.addEventListener('submit', this._handleDelete);
   }
 
-  close() {
-    super.close();
-    this._form.removeEventListener('submit', this._handleDelete);
-  }
+  // close() {
+  //   super.close();
+  //   // this._form.removeEventListener('submit', this._handleDelete);
+  // }
 }
