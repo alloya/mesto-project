@@ -18,9 +18,10 @@ import {
   profileName,
   profileDescription,
   deleteConfirmPopup,
-  fullImagePopup
+  fullImagePopup,
+  btnText
 } from './components/const';
-import {setInvisible, setVisible, handleError, disableButton} from './components/common';
+import {setInvisible, setVisible, handleError, disableButton, enableButton} from './components/common';
 import Card from './components/Card';
 import Api from './components/Api';
 import FormValidator from "./components/FormValidator";
@@ -98,7 +99,7 @@ function loadImage(src) {
 }
 
 const cardEditPopup = new PopupWithForm(cardPopup, data => {
-  cardEditPopup.loading(true);
+  cardEditPopup.loading(true, btnText.saving);
   const loadImagePromise = loadImage(data.cardLink)
     .then((res) => { return res.target })
 
@@ -119,7 +120,7 @@ const cardEditPopup = new PopupWithForm(cardPopup, data => {
 });
 
 const profileEditPopup = new PopupWithForm(profilePopup, () => {
-  profileEditPopup.loading(true);
+  profileEditPopup.loading(true, btnText.saving);
   const profileData = {
     name: profileNameInput.value,
     about: profileDescriptionInput.value
@@ -136,7 +137,7 @@ const profileEditPopup = new PopupWithForm(profilePopup, () => {
 });
 
 const avatarEditPopup = new PopupWithForm(avatarPopup, data => {
-  avatarEditPopup.loading(true);
+  avatarEditPopup.loading(true, btnText.saving);
   const checkUrl = loadImage(data.avatarUrl);
   const loadAvatar = checkUrl
     .then(res => { return api.updateCurrentUserAvatar(data) })
@@ -155,10 +156,12 @@ const avatarEditPopup = new PopupWithForm(avatarPopup, data => {
 });
 
 const deletePopup = new PopupWithDelete(deleteConfirmPopup, card => {
+  disableButton(deletePopup.submitButton);
   api.deleteCard(card.getCardId())
     .then(() => card.deleteCard())
     .then(() => deletePopup.close())
     .catch(err => handleError(err))
+    .finally(() => enableButton(deletePopup.submitButton));
 });
 
 function deleteCard(card) {
@@ -166,6 +169,7 @@ function deleteCard(card) {
 }
 
 profileOpenButton.addEventListener('click', () => {
+  formValidators['profile-form'].resetForm();
   const profile = userInfo.getUserInfo();
   profileNameInput.value = profile.name;
   profileDescriptionInput.value = profile.about;
@@ -175,18 +179,27 @@ profileOpenButton.addEventListener('click', () => {
 });
 
 cardAddButton.addEventListener('click', () => {
+  formValidators['newCard-form'].resetForm();
   cardEditPopup.open();
   cardEditPopup.setEventListeners();
 });
 
 avatarEdit.addEventListener('click', () => {
+  formValidators['avatar-form'].resetForm();
   avatarEditPopup.open();
   avatarEditPopup.setEventListeners();
 });
 
-formList.forEach(form => {
-  const formValidator = new FormValidator(formElements, form);
-  formValidator.enableValidation();
-})
+const formValidators = {};
+const enableValidation = (config) => { 
+  formList.forEach((form) => { 
+    const validator = new FormValidator(config, form); 
+    const formName = form.getAttribute('name'); 
+    formValidators[formName] = validator; 
+    validator.enableValidation(); 
+  }); 
+}; 
+
+enableValidation(formElements);
 
 

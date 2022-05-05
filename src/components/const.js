@@ -1,10 +1,9 @@
-import Popup from "./Popup";
-import PopupWithImage from "./PopupWithImage";
-import PopupWithDelete from "./PopupWithDelete";
-
 export const auth = {
-  token: '100a0a32-f941-4db8-a158-a769d9d537de',
-  apiUrl: 'https://nomoreparties.co/v1/plus-cohort-8'
+  apiUrl: 'https://nomoreparties.co/v1/plus-cohort-8',
+  headers: {
+    'authorization': '100a0a32-f941-4db8-a158-a769d9d537de',
+    'Content-type': 'application/json'
+  }
 };
 export const profilePopup = document.querySelector(".profile_popup");
 export const cardPopup = document.querySelector(".cards_popup");
@@ -30,7 +29,7 @@ export const formElements = {
 export const formElementClass = '.form';
 export const loadingBar = document.querySelector('.loading-bar');
 export const main = document.querySelector('.main');
-export const btnText = {save: 'Сохранить', saving: 'Сохраняю...', create: 'Создать'}
+export const btnText = {saving: 'Сохраняю...'}
 export const errorText = document.querySelector('.error-text');
 export const profile = {
   name: profileName,

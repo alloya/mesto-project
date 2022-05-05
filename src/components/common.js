@@ -1,4 +1,4 @@
-import { btnText, errorText, formElements } from "./const";
+import { errorText, formElements } from "./const";
 import {errorPopup} from "../index";
 
 export function setVisible(element) {
@@ -8,16 +8,6 @@ export function setVisible(element) {
 export function setInvisible(element) {
   element.classList.add('d-none');
 }
-
-// export function setButtonBlockedState(btn) {
-//   disableButton(btn);
-//   btn.textContent = btnText.saving;
-// }
-
-// export function resetButtonText(btn, text) {
-//   btn.textContent = text;
-//   enableButton(btn);
-// }
 
 export function disableButton(btn) {
   btn.classList.add(formElements.buttonInactive);

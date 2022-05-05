@@ -1,7 +1,7 @@
 export default class Api {
   constructor(auth) {
     this._url = auth.apiUrl;
-    this._token = auth.token;
+    this._headers = auth.headers;
   }
 
   _handleResponse(res) {
@@ -13,18 +13,14 @@ export default class Api {
 
   getCards() {
     return fetch(`${this._url}/cards`, {
-      headers: {
-        authorization: this._token
-      }
+      headers: this._headers
     })
       .then(this._handleResponse);
   }
 
   getCurrentUser() {
     return fetch(`${this._url}/users/me`, {
-      headers: {
-        authorization: this._token
-      }
+      headers: this._headers
     })
       .then(this._handleResponse);
   }
@@ -32,10 +28,7 @@ export default class Api {
   updateCurrentUser({ name, about }) {
     return fetch(`${this._url}/users/me`, {
       method: "PATCH",
-      headers: {
-        authorization: this._token,
-        'Content-type': 'application/json'
-      },
+      headers: this._headers,
       body: JSON.stringify({
         name: name,
         about: about
@@ -47,10 +40,7 @@ export default class Api {
   updateCurrentUserAvatar(avatarSrc) {
     return fetch(`${this._url}/users/me/avatar`, {
       method: "PATCH",
-      headers: {
-        authorization: this._token,
-        'Content-type': 'application/json'
-      },
+      headers: this._headers,
       body: JSON.stringify({
         avatar: avatarSrc.avatarUrl
       })
@@ -61,9 +51,7 @@ export default class Api {
   putLike(cardId) {
     return fetch(`${this._url}/cards/likes/${cardId}`, {
       method: "PUT",
-      headers: {
-        authorization: this._token
-      }
+      headers: this._headers
     })
       .then(this._handleResponse);
   }
@@ -71,9 +59,7 @@ export default class Api {
   deleteLike(cardId) {
     return fetch(`${this._url}/cards/likes/${cardId}`, {
       method: "DELETE",
-      headers: {
-        authorization: this._token
-      }
+      headers: this._headers
     })
       .then(this._handleResponse);
   }
@@ -81,10 +67,7 @@ export default class Api {
   createNewCard({cardName, cardLink}) {
     return fetch(`${this._url}/cards`, {
       method: "POST",
-      headers: {
-        authorization: this._token,
-        'Content-type': 'application/json'
-      },
+      headers: this._headers,
       body: JSON.stringify({
         name: cardName,
         link: cardLink
@@ -96,9 +79,7 @@ export default class Api {
   deleteCard(cardId) {
     return fetch(`${this._url}/cards/${cardId}`, {
       method: "DELETE",
-      headers: {
-        authorization: this._token
-      }
+      headers: this._headers
     })
       .then(this._handleResponse);
   }

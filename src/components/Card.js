@@ -45,6 +45,7 @@ export default class Card {
   _setEventListeners() {
     this._cardLike.addEventListener('click', () => this._handleLikeClick(this, !this.isLiked()));
     this._cardImg.addEventListener('click', () => this._handleCardClick(this._title, this._link));
+    this._cardDelete.addEventListener('click', () => this._handleDelete(this));
   }
 
   createImg(imageSrc) {
@@ -78,6 +79,5 @@ export default class Card {
       this._cardDelete.remove();
       return;
     }
-    this._cardDelete.addEventListener('click', () => this._handleDelete(this));
   }
 }
