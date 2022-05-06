@@ -1,5 +1,5 @@
-import { btnText, errorPopup, errorText, formElements } from "./const";
-import { closePopup, openPopup } from "./modal";
+import { errorText, formElements } from "./const";
+import {errorPopup} from "../index";
 
 export function setVisible(element) {
   element.classList.remove('d-none');
@@ -7,16 +7,6 @@ export function setVisible(element) {
 
 export function setInvisible(element) {
   element.classList.add('d-none');
-}
-
-export function setButtonBlockedState(btn) {
-  disableButton(btn);
-  btn.textContent = btnText.saving;
-}
-
-export function resetButtonText(btn, text) {
-  btn.textContent = text;
-  enableButton(btn);
 }
 
 export function disableButton(btn) {
@@ -30,8 +20,8 @@ export function enableButton(btn) {
 }
 
 export function handleError(err) {
-  console.log(err.message || err)
+  console.log(err && err.message || err)
   errorText.textContent = err && err.message || err;
-  openPopup(errorPopup);
-  setTimeout(() => {closePopup(errorPopup)}, 2000);
+  errorPopup.open();
+  setTimeout(() => {errorPopup.close()}, 2000);
 }

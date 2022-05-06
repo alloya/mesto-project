@@ -21,9 +21,9 @@
   "homepage": "https://alloya.github.io/mesto-project",
   "devDependencies": {
     "@babel/core": "^7.17.8",
+    "@babel/polyfill": "^7.12.1",
     "@babel/preset-env": "^7.16.11",
     "autoprefixer": "^10.4.4",
-    "babel-loader": "^8.2.4",
     "clean-webpack-plugin": "^4.0.0",
     "css-loader": "^6.7.1",
     "cssnano": "^5.1.5",
@@ -37,6 +37,7 @@
     "webpack-dev-server": "^4.7.4"
   },
   "dependencies": {
+    "babel-loader": "^8.2.5",
     "core-js": "^3.21.1"
   }
 }

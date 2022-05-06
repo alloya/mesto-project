@@ -1,44 +1,202 @@
 import './index.css';
-import {profilePopup, cardPopup, cardAddButton, profileOpenButton, avatarEdit, avatarPopup, avatarForm, errorObject, formList, formElements, loadingBar, main, deletePopup, cardsContainer} from './components/const';
-import {enableValidation} from './components/validate';
-import {openPopup, resetForm} from './components/modal';
-import {submitProfileForm, submitNewAvatar, setUserData, fillUserData} from './components/profile';
-import {createCard} from './components/card';
-import { getCurrentUser, getCards } from './components/api';
-import { setInvisible, setVisible, handleError } from './components/common';
-import { initializeCardsList, submitCardForm, removeCard } from './components/cardActions'
-export let currUser = {};
+import {
+  auth,
+  profilePopup,
+  cardPopup,
+  cardAddButton,
+  profileOpenButton,
+  avatarEdit,
+  avatarPopup,
+  formList,
+  formElements,
+  loadingBar,
+  main,
+  cardsContainer,
+  profile,
+  profileNameInput,
+  profileDescriptionInput,
+  profileName,
+  profileDescription,
+  deleteConfirmPopup,
+  fullImagePopup,
+  btnText
+} from './components/const';
+import {setInvisible, setVisible, handleError, disableButton, enableButton} from './components/common';
+import Card from './components/Card';
+import Api from './components/Api';
+import FormValidator from "./components/FormValidator";
+import PopupWithForm from "./components/PopupWithForm";
+import UserInfo from "./components/UserInfo";
+import PopupWithDelete from "./components/PopupWithDelete";
+import Section from './components/Section';
+import Popup from "./components/Popup";
+import PopupWithImage from "./components/PopupWithImage";
 
-const userPromise = getCurrentUser();
+export const api = new Api(auth);
+const userInfo = new UserInfo(profile);
+export const errorPopup = new Popup(document.querySelector('.error-popup'));
+export const popupWithFullImage = new PopupWithImage(fullImagePopup);
+popupWithFullImage.setEventListeners();
+const cardList = new Section({
+  renderer: (item) => {
+    createCard(item)
+  }
+}, cardsContainer)
 
-const cardsPromise = userPromise.then(res => getCards());
+Promise.all([api.getCurrentUser(), api.getCards()])
+  .then(([userData, cardsList]) => {
+    userInfo.setUserInfo(userData);
+    cardList.render(cardsList.reverse());
+  })
+  .then(() => {
+    setInvisible(loadingBar);
+    setVisible(main);
+  })
+  .catch(err => console.log('Error: ' + err))
 
-Promise.all([userPromise, cardsPromise]).then(([user, cards]) => { 
-  currUser = user;
-  fillUserData(user);
-  initializeCardsList(cards, user._id);
-  setInvisible(loadingBar);
-  setVisible(main);
+function handleLikeClick(card, putLike) {
+  putLike ? addLike(card) : removeLike(card);
+}
+
+function addLike(card) {
+  api.putLike(card.getCardId())
+    .then(response => card.manageLikes(response))
+    .catch(err => handleError(err))
+}
+
+function removeLike(card) {
+  api.deleteLike(card.getCardId())
+    .then(response => card.manageLikes(response))
+    .catch(err => handleError(err))
+}
+
+function handleCardClick(title, link) {
+  const card = {
+    url: link,
+    name: title
+  }
+  popupWithFullImage.open(card);
+}
+
+function createCard(data, imageElement) {
+  const card = new Card(data, userInfo.id, '#card-template', handleCardClick, handleLikeClick, deleteCard, imageElement);
+  cardList.addItem(card.createCard());
+}
+
+function loadImage(src) {
+  const image = document.createElement('img');
+  image.src = src;
+
+  return new Promise((resolve, reject) => {
+    image.onerror = reject;
+    image.onload = resolve;
+  })
+}
+
+const cardEditPopup = new PopupWithForm(cardPopup, data => {
+  cardEditPopup.loading(true, btnText.saving);
+  const loadImagePromise = loadImage(data.cardLink)
+    .then((res) => {
+      return res.target
+    })
+
+  const postCard = loadImagePromise
+    .then(res => res && api.createNewCard(data))
+    .catch(err => {
+      err.message = "Не удалось загрузить изображение. Проверьте правильность ссылки и ваше сетевое соединение.";
+      return err;
+    });
+
+  Promise.all([postCard, loadImagePromise])
+    .then(([card, loadedImgElement]) => createCard(card, loadedImgElement))
+    .then(() => {
+      cardEditPopup.close();
+    })
+    .catch(err => handleError(err))
+    .finally(() => cardEditPopup.loading(false));
 });
+cardEditPopup.setEventListeners();
+
+const profileEditPopup = new PopupWithForm(profilePopup, profileData => {
+  profileEditPopup.loading(true, btnText.saving);
+  api.updateCurrentUser(profileData)
+    .then(res => {
+      userInfo.setUserInfo(res)
+    })
+    .then(() => {
+      profileEditPopup.close();
+    })
+    .catch(err => handleError(err))
+    .finally(() => profileEditPopup.loading(false))
+});
+profileEditPopup.setEventListeners();
+
+const avatarEditPopup = new PopupWithForm(avatarPopup, data => {
+  avatarEditPopup.loading(true, btnText.saving);
+  const checkUrl = loadImage(data.avatarUrl);
+  const loadAvatar = checkUrl
+    .then(res => {
+      return api.updateCurrentUserAvatar(data)
+    })
+    .catch(err => {
+      err.message = "Не удалось загрузить изображение. Проверьте правильность ссылки и ваше сетевое соединение.";
+      return err;
+    })
+
+  Promise.all([checkUrl, loadAvatar])
+    .then(([check, res]) =>
+      userInfo.setUserInfo(res)
+    )
+    .then(() => {
+      avatarEditPopup.close();
+    })
+    .catch(err => handleError(err))
+    .finally(() => avatarEditPopup.loading(false))
+});
+
+avatarEditPopup.setEventListeners();
+
+const deletePopup = new PopupWithDelete(deleteConfirmPopup, card => {
+  disableButton(deletePopup.submitButton);
+  api.deleteCard(card.getCardId())
+    .then(() => card.deleteCard())
+    .then(() => deletePopup.close())
+    .catch(err => handleError(err))
+    .finally(() => enableButton(deletePopup.submitButton));
+});
+deletePopup.setEventListeners();
+
+function deleteCard(card) {
+  deletePopup.open(card);
+}
 
 profileOpenButton.addEventListener('click', () => {
-  resetForm(profilePopup);
-  setUserData();
-  openPopup(profilePopup);
+  formValidators['profile-form'].resetValidation();
+  const profile = userInfo.getUserInfo();
+  profileEditPopup.setInputValues(profile);
+  profileEditPopup.open();
 });
-profilePopup.addEventListener('submit', submitProfileForm);
+
 cardAddButton.addEventListener('click', () => {
-  resetForm(cardPopup);
-  openPopup(cardPopup);
+  formValidators['newCard-form'].resetValidation();
+  cardEditPopup.open();
 });
-cardPopup.addEventListener('submit', (evt) => {
-  submitCardForm(evt, currUser._id)
-});
+
 avatarEdit.addEventListener('click', () => {
-  resetForm(avatarPopup);
-  openPopup(avatarPopup);
+  formValidators['avatar-form'].resetValidation();
+  avatarEditPopup.open();
 });
-avatarForm.addEventListener('submit', submitNewAvatar);
+
+const formValidators = {};
+const enableValidation = (config) => {
+  formList.forEach((form) => {
+    const validator = new FormValidator(config, form);
+    const formName = form.getAttribute('name');
+    formValidators[formName] = validator;
+    validator.enableValidation();
+  });
+};
+
+enableValidation(formElements);
 
 
-enableValidation(formList, formElements, errorObject);
