@@ -30,6 +30,7 @@ export default class PopupWithForm extends Popup {
 
   close() {
     super.close();
+    this._resetForm();
   }
 
   loading(isLoading, text) {
@@ -40,5 +41,9 @@ export default class PopupWithForm extends Popup {
     this._inputsList.forEach(input => {
       input.value = data[input.name];
     })
+  }
+
+  _resetForm() {
+    this._form.reset();
   }
 }

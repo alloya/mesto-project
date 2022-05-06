@@ -111,9 +111,9 @@ const cardEditPopup = new PopupWithForm(cardPopup, data => {
     .then(([card, loadedImgElement]) => createCard(card, loadedImgElement))
     .then(() => {
       cardEditPopup.close();
-      cardEditPopup.loading(false)
     })
     .catch(err => handleError(err))
+    .finally(() => cardEditPopup.loading(false));
 });
 cardEditPopup.setEventListeners();
 
@@ -125,9 +125,9 @@ const profileEditPopup = new PopupWithForm(profilePopup, profileData => {
     })
     .then(() => {
       profileEditPopup.close();
-      profileEditPopup.loading(false);
     })
     .catch(err => handleError(err))
+    .finally(() => profileEditPopup.loading(false))
 });
 profileEditPopup.setEventListeners();
 
@@ -149,9 +149,9 @@ const avatarEditPopup = new PopupWithForm(avatarPopup, data => {
     )
     .then(() => {
       avatarEditPopup.close();
-      avatarEditPopup.loading(false);
     })
     .catch(err => handleError(err))
+    .finally(() => avatarEditPopup.loading(false))
 });
 
 avatarEditPopup.setEventListeners();
@@ -171,19 +171,19 @@ function deleteCard(card) {
 }
 
 profileOpenButton.addEventListener('click', () => {
-  formValidators['profile-form'].resetForm();
+  formValidators['profile-form'].resetValidation();
   const profile = userInfo.getUserInfo();
   profileEditPopup.setInputValues(profile);
   profileEditPopup.open();
 });
 
 cardAddButton.addEventListener('click', () => {
-  formValidators['newCard-form'].resetForm();
+  formValidators['newCard-form'].resetValidation();
   cardEditPopup.open();
 });
 
 avatarEdit.addEventListener('click', () => {
-  formValidators['avatar-form'].resetForm();
+  formValidators['avatar-form'].resetValidation();
   avatarEditPopup.open();
 });
 
