@@ -10,7 +10,6 @@ export default class PopupWithDelete extends Popup {
   open(card) {
     super.open();
     this._card = card;
-    this.setEventListeners();
   }
 
   _handleDelete = evt => {

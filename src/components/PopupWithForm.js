@@ -33,6 +33,12 @@ export default class PopupWithForm extends Popup {
   }
 
   loading(isLoading, text) {
-    isLoading ? this._submit.textContent = text :  this._submit.textContent = this._submitInitialText;
+    isLoading ? this._submit.textContent = text : this._submit.textContent = this._submitInitialText;
+  }
+
+  setInputValues(data) {
+    this._inputsList.forEach(input => {
+      input.value = data[input.name];
+    })
   }
 }
